@@ -1,26 +1,31 @@
-// nqueens(combination)
-
-import java.io.*;
-import java.util.*;
+import java.io.;
+import java.util.;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
         int tnq=4;
         boolean vis[][] = new boolean[4][4];
-        vis[0][0]=false;
+        vis[0][0]=false; 
+// there is no need to initialize boolean with false becuase java by default initilaizes new boolean with a false value(this step is optional)
         System.out.println (nqueen_comb(vis,tnq,0,""));
-        
+        System.out.println (nqueen_perm(vis,tnq,0,""));
+        System.out.println(Queen_comb_sub(vis,tnq,0,""));
+        System.out.println(perm_comb_sub(vis,tnq,0,""));
+
 
     }
+    //is safe to place-------------------------------------------------
    public static boolean isSafeToPlaceQueen(boolean[][]vis , int row, int col)
     {
-        int[][] dir ={{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
+        // int[][] dir ={{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}; 
+        //combination...mei neeche koi queen hi nahi hogi toh uski neeche vali calls check karne ki need nahi ..but for perm queen baadmei bhi placed ho sakti hai already toh uski baad vali 4 calls bhi check krni padegi
+        int[][] dir ={{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}};
          int n= vis.length;
         int m= vis[0].length;
         for(int d=0;d<dir.length;d++)
         {
-        for(int rad=1;rad<vis.length;rad++)    
+        for(int rad=1;rad<vis.length;rad++)
             {
             int r = row+rad* dir[d][0];
             int c = col+rad* dir[d][1];
@@ -31,11 +36,13 @@ public class Main {
             }
             else
             break;
-            
+
             }
         }
         return true;
     }
+
+        //----------------------------comb queen----------------------------------
 
     public static int nqueen_comb(boolean[][] vis ,int tnq, int idx , String asf) 
     {
@@ -44,7 +51,7 @@ public class Main {
             System.out.println(asf);
             return 1 ;
         }
-        
+
         int count =0;
         int n= vis.length;
         int m= vis[0].length;
@@ -59,61 +66,19 @@ public class Main {
                 vis[r][c]=false;
             }
         }
-        
+
         return count;
-        
-    }
-
-}
-
-
-// nqueens(permutation)
-
-import java.io.*;
-import java.util.*;
-
-public class Main {
-
-    public static void main(String[] args) throws Exception {
-        int tnq=4;
-        boolean vis[][] = new boolean[4][4];
-        vis[0][0]=false;
-        System.out.println (nqueen(vis,tnq,0,""));
-        
 
     }
-   public static boolean isSafeToPlaceQueen(boolean[][]vis , int row, int col)
-    {
-        int[][] dir ={{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}};
-         int n= vis.length;
-        int m= vis[0].length;
-        for(int d=0;d<dir.length;d++)
-        {
-        for(int rad=1;rad<vis.length;rad++)    
-            {
-            int r = row+rad* dir[d][0];
-            int c = col+rad* dir[d][1];
-            if(r>=0 && c>=0 && r<n && c<m )
-            {
-                if(vis[r][c])
-                return false;
-            }
-            else
-            break;
-            
-            }
-        }
-        return true;
-    }
-
-    public static int nqueen(boolean[][] vis ,int tnq, int idx , String asf) 
+    //----------------------------perm queen----------------------------------
+    public static int nqueen_perm(boolean[][] vis ,int tnq, int idx , String asf) 
     {
         if(tnq==0)
         {
             System.out.println(asf);
             return 1 ;
         }
-        
+
         int count =0;
         int n= vis.length;
         int m= vis[0].length;
@@ -124,13 +89,73 @@ public class Main {
             if(isSafeToPlaceQueen(vis,r,c) && !vis[r][c])
             {
                 vis[r][c]=true;
-                count += nqueen(vis, tnq-1,0,asf+"(" + Integer.toString(r)+","+Integer.toString(c)+")");
+                count += nqueen_perm(vis, tnq-1,0,asf+"(" + Integer.toString(r)+","+Integer.toString(c)+")");
                 vis[r][c]=false;
             }
         }
-        
+
         return count;
-        
+
     }
+
+    // Combination queens using susbsequence----------------------------------------------------
+    public static int Queen_comb_sub(boolean [][]vis,int tnq,int idx,String asf){
+        int n= vis.length;
+         int m= vis[0].length;
+        
+         if(tnq==0 || idx==n*m){
+             if(tnq==0){
+             System.out.println(asf);
+             }
+            return tnq==0 ?1:0;
+         }
+        // OR
+        // if(tnq==0 || idx==n*m){
+        //     if(tnq==0){
+        //     System.out.println(asf);
+        //     return 1;
+        //     }
+        //    return 0;
+        // }
+ 
+         int count=0; 
+             int r = idx/m;
+             int c = idx%m;
+             if(isSafeToPlaceQueen(vis,r,c))
+             {
+                 vis[r][c]=true;
+                 count += Queen_comb_sub(vis, tnq-1,idx+1,asf+"(" + Integer.toString(r)+","+Integer.toString(c)+")");
+                 vis[r][c]=false;
+             }
+         count+=Queen_comb_sub(vis, tnq,idx+1,asf);
+ 
+         return count;
+     }
+
+     //PERMUTATION SUBSEQUNCE QUEENS -------------------------------------------------------------------
+     public static int perm_comb_sub(boolean [][]vis,int tnq,int idx,String asf){
+        int n= vis.length;
+         int m= vis[0].length;
+        
+         if(tnq==0 || idx==n*m){
+             if(tnq==0){
+             System.out.println(asf);
+             }
+            return tnq==0 ?1:0;
+         }
+ 
+         int count=0; 
+             int r = idx/m;
+             int c = idx%m;
+             if(isSafeToPlaceQueen(vis,r,c) && !vis[r][c])
+             {
+                 vis[r][c]=true;
+                 count += perm_comb_sub(vis, tnq-1,0,asf+"(" + Integer.toString(r)+","+Integer.toString(c)+")");
+                 vis[r][c]=false;
+             }
+         count+=perm_comb_sub(vis, tnq,idx+1,asf);
+ 
+         return count;
+     }
 
 }
