@@ -1,3 +1,5 @@
+// nqueens(combination)
+
 import java.io.*;
 import java.util.*;
 
@@ -34,8 +36,6 @@ public class Main {
         }
         return true;
     }
-
-    // nqueens(combination)
 
     public static int nqueen_comb(boolean[][] vis ,int tnq, int idx , String asf) 
     {
