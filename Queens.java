@@ -1,34 +1,37 @@
 // nqueens(combination)
 
-import java.io.;import java.util.;
+// import java.io;
+// import java.util;
 
-public class Main {
+public class Queens {
 
     public static void main(String[] args) throws Exception {
         int tnq = 4;
         boolean vis[][] = new boolean[4][4];
         vis[0][0] = false;
+
         // there is no need to initialize boolean with false becuase java by default
         // initilaizes new boolean with a false value(this step is optional)
         System.out.println(nqueen_comb(vis, tnq, 0, ""));
         System.out.println(nqueen_perm(vis, tnq, 0, ""));
         System.out.println(Queen_comb_sub(vis, tnq, 0, ""));
-        System.out.println(Perm_comb_sub(vis, tnq, 0, ""));
-        // for perm_queen_optimized1 & comb_queen_optimized1-----------------
-        Scanner scn = new Scanner(System.in);
-        int n = scn.nextInt();
-        int m = scn.nextInt();
-        int tnq = 4;
+        System.out.println(perm_comb_sub(vis, tnq, 0, ""));
+
+        // for perm_queen_optimized1 & comb_queen_optimized1---------
+        // Scanner scn = new Scanner(System.in);
+        int n = 4;
+        int m = 4;
+        // int tnq = 4;
         boolean[] row = new boolean[n];
         boolean[] col = new boolean[m];
         boolean[] diag = new boolean[n + m - 1];
         boolean[] adiag = new boolean[n + m - 1];
         System.out.println(comb_queen_optimized1(n, m, tnq, 0, row, col, diag, adiag, ""));
+        System.out.println(perm_queen_optimized1(n, m, tnq, 0, row, col, diag, adiag, ""));
     }
 
-    }
+    // ----------------------------IS SAFE TO PLACE---------------------------------
 
-    // is safe to place-------------------------------------------------
     public static boolean isSafeToPlaceQueen(boolean[][] vis, int row, int col) {
         // int[][] dir ={{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
         // combination...mei neeche koi queen hi nahi hogi toh uski neeche vali calls
@@ -52,7 +55,7 @@ public class Main {
         return true;
     }
 
-    // ----------------------------comb queen----------------------------------
+    // ----------------------COMBINATION QUEEN----------------------------
 
     public static int nqueen_comb(boolean[][] vis, int tnq, int idx, String asf) {
         if (tnq == 0) {
@@ -78,7 +81,7 @@ public class Main {
 
     }
 
-    // ----------------------------perm queen----------------------------------
+    // --------------------PERMUTATION QUEEN---------------------------
     public static int nqueen_perm(boolean[][] vis, int tnq, int idx, String asf) {
         if (tnq == 0) {
             System.out.println(asf);
@@ -103,8 +106,8 @@ public class Main {
 
     }
 
-    // Combination queens using
-    // susbsequence----------------------------------------------------
+    // ------------------COMBINATION QUEENS SUBSEQUENCE-------------------------
+
     public static int Queen_comb_sub(boolean[][] vis, int tnq, int idx, String asf) {
         int n = vis.length;
         int m = vis[0].length;
@@ -138,8 +141,8 @@ public class Main {
         return count;
     }
 
-    // PERMUTATION SUBSEQUNCE QUEENS
-    // -------------------------------------------------------------------
+    // ---------------------- PERMUTATION SUBSEQUNCE QUEENS-----------------------
+
     public static int perm_comb_sub(boolean[][] vis, int tnq, int idx, String asf) {
         int n = vis.length;
         int m = vis[0].length;
@@ -170,7 +173,7 @@ public class Main {
     // boolean[] diag;
     // boolean[] adiag;
 
-    // optimized 01 COMBINATION----------------------------------------------
+    // --------------------------OPTIMIZED 01 COMBINATION---------------------------
     public static int comb_queen_optimized1(int n, int m, int tnq, int r, boolean[] row, boolean[] col, boolean[] diag,
             boolean[] adiag, String asf) {
         if (tnq == 0) {
@@ -192,8 +195,8 @@ public class Main {
 
     }
 
-    // optimized 01 PERMUTATION----------------------------------------------
-    public static int comb_queen_optimized1(int n, int m, int tnq, int r, boolean[] row, boolean[] col, boolean[] diag,
+    // -----------------------OPTIMIZED 01 PERMUTATION------------------------
+    public static int perm_queen_optimized1(int n, int m, int tnq, int r, boolean[] row, boolean[] col, boolean[] diag,
             boolean[] adiag, String asf) {
         if (tnq == 0 || r == n) {
             if (tnq == 0) {
@@ -207,12 +210,12 @@ public class Main {
         for (int c = 0; c < m; c++) {
             if (!row[r] && !col[c] && !diag[r + c] && !adiag[r - c + m - 1]) {
                 row[r] = col[c] = diag[r + c] = adiag[r - c + m - 1] = true;
-                count += comb_queen_optimized1(n, m, tnq - 1, 0, row, col, diag, adiag,
+                count += perm_queen_optimized1(n, m, tnq - 1, 0, row, col, diag, adiag,
                         asf + "(" + Integer.toString(r) + " " + Integer.toString(c) + ")");
                 row[r] = col[c] = diag[r + c] = adiag[r - c + m - 1] = false;
             }
         }
-        count += comb_queen_optimized1(n, m, tnq, r + 1, row, col, diag, adiag, asf);
+        count += perm_queen_optimized1(n, m, tnq, r + 1, row, col, diag, adiag, asf);
         return count;
 
     }
