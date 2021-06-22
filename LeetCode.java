@@ -1,3 +1,7 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 // Q52. N-Queens II
 // n*n matrix && tnq = n && store answer
 
@@ -31,11 +35,7 @@ class Solution {
 
     }
 
-}
-
-// Q39. COMBINATION SUM
-
-class Solution {
+    // Q39. COMBINATION SUM
 
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> ans = new ArrayList<>();
@@ -62,11 +62,7 @@ class Solution {
 
     }
 
-}
-
-// Q40. COMBINATION SUM 2
-
-class Solution {
+    // Q40. COMBINATION SUM 2
 
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
         List<List<Integer>> ans = new ArrayList<>();
@@ -96,32 +92,113 @@ class Solution {
 
     }
 
- }
+    // Q322. COIN CHANGE(TLE)
+
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0)
+            return 0;
+        int minAns = (int) 1e9;
+        for (int ele : coins) {
+            if (amount - ele >= 0) {
+                int recAns = coinChange(coins, amount - ele);
+                if (recAns != (int) 1e9 && recAns + 1 < minAns) {
+                    minAns = recAns + 1;
+                }
+            }
+        }
+        return minAns;
+
+    }
+
+    public int coinChange_(int[] coins, int amount) {
+        int ans = coinChange(coins, amount);
+        return ans != (int) 1e9 ? ans : -1;
+    }
+
+    // Q191. NUMBER OF 1 BITS
+
+    // you need to treat n as an unsigned value
+    public int hammingWeight(int n) {
+        int count = 0;
+        while (n != 0) {
+            if ((n & 1) != 0)
+                count++; // n &1 is telling if previous number is 1 or 0
+            n >>>= 1;
+        }
+        return count;
+
+    }
+
+    // Q338. COUNTING BITS
+
+    public int[] countBits(int n) {
+
+        int[] ans = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            ans[i] = ans[i & (i - 1)] + 1;
+        }
+        return ans;
+    }
+
+    // Q231. POWER OF TWO
+
+    public boolean isPowerOfTwo(int n) {
+        return n > 0 && (n & (n - 1)) == 0;
+
+    }
+
+    // Q342. POWER OF FOUR
+
+    public boolean isPowerOfFour(int n) {
+        if (n <= 0 || (n & (n - 1)) != 0)
+            return false;
+
+        int count = 0;
+        while (n != 0) {
+            if ((n & 1) == 0)
+                count++;
+            n >>>= 1;
+        }
+        return (count & 1) == 0;
+
+    }
+
+    // Q136. SINGLE NUMBER
+
+    public int singleNumber(int[] nums) {
+        int ans = 0;
+        for (int ele : nums)
+            ans ^= ele; // ^ = XOR
+        return ans;
+
+    }
 
     // Q37. SUDOKU
 
-public static boolean isSafeToPlaceNumber(char[][] board, int r,int c, int num ) {
-    //row
-    for(int i=0;i<9;i++){
-        if(board[r][i] - '0' == num)
-        return false;
-    }
-
-    //col
-    for(int i=0;i<9;i++){
-        if(board[i][c] - '0' == num)
-        return false;
-
-    //mat
-    r = (r/3) * 3;
-    c = (c/3) * 3;
-    for(int i=0;i<9;i++){
-        for(int j=0;j<9;j++){
-            if(board[r+i][c+j] - '0' == num)
-            return false;
+    public static boolean isSafeToPlaceNumber(char[][] board, int r, int c, int num) {
+        // row
+        for (int i = 0; i < 9; i++) {
+            if (board[r][i] - '0' == num)
+                return false;
         }
+
+        // col
+        for (int i = 0; i < 9; i++) {
+            if (board[i][c] - '0' == num)
+                return false;
+
+            // mat
+            r = (r / 3) * 3;
+            c = (c / 3) * 3;
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    if (board[r + i][c + j] - '0' == num)
+                        return false;
+                }
+            }
+            return true;
+        }
+
     }
-    return true;
-}
 
 }
