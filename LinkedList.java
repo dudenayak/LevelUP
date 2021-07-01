@@ -128,4 +128,17 @@ public class LinkedList {
         dummy.next = null; // delete dummy;
         return head;
     }
+
+    // MERGESORT LL
+    public static ListNode mergeSort(ListNode head) {
+
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode mid = midNode(head);
+        ListNode newHead = mid.next;
+        mid.next = null;
+
+        return mergeTwoLists(mergeSort(head), mergeSort(newHead));
+    }
 }
