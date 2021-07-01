@@ -173,32 +173,33 @@ class Solution {
 
     }
 
-    // Q37. SUDOKU
+    // // Q37. SUDOKU
 
-    public static boolean isSafeToPlaceNumber(char[][] board, int r, int c, int num) {
-        // row
-        for (int i = 0; i < 9; i++) {
-            if (board[r][i] - '0' == num)
-                return false;
-        }
+    // public static boolean isSafeToPlaceNumber(char[][] board, int r, int c, int
+    // num) {
+    // // row
+    // for (int i = 0; i < 9; i++) {
+    // if (board[r][i] - '0' == num)
+    // return false;
+    // }
 
-        // col
-        for (int i = 0; i < 9; i++) {
-            if (board[i][c] - '0' == num)
-                return false;
+    // // col
+    // for (int i = 0; i < 9; i++) {
+    // if (board[i][c] - '0' == num)
+    // return false;
 
-            // mat
-            r = (r / 3) * 3;
-            c = (c / 3) * 3;
-            for (int i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    if (board[r + i][c + j] - '0' == num)
-                        return false;
-                }
-            }
-            return true;
-        }
+    // // mat
+    // r = (r / 3) * 3;
+    // c = (c / 3) * 3;
+    // for (int i = 0; i < 9; i++) {
+    // for (int j = 0; j < 9; j++) {
+    // if (board[r + i][c + j] - '0' == num)
+    // return false;
+    // }
+    // }
+    // return true;
+    // }
 
-    }
+    // }
 
 }
