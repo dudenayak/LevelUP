@@ -21,6 +21,20 @@ public class LinkedList {
         return slow;
     }
 
+    // 2nd MIDNODE
+    public ListNode middleNode(ListNode head) {
+
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+
     // REVERSE
     public static ListNode reverse(ListNode head) {
         if (head == null || head.next == null)
@@ -95,13 +109,20 @@ public class LinkedList {
             c1.next = f1;
             c2.next = f1.next;
 
-            c1 = c1.next; // c1=f1
+            c1 = c1.next; // c1=f1 kyuki upar c1.m=next f1 ko point krrha hai toh c1 ab c1 k
+            // next k equal kr denge (because c1 ka next is updated toh yaha use kr sakte
+            // hai..same reason goes for c2.next)
             c2 = c2.next; // c2=c1.next
         }
 
-        c1.next = null;
+        c1.next = null; // jese reverse mei prev equlas null ko point karrate hai vo vali cheez
         newHead = reverse(newHead);
-        c1.next = newHead;
+        c1.next = newHead; // reversed ll ko link krrhe hai a,b,c,d se.....mtlb a,b,c,d,e,f,g
+
+        // Let say original ll is a,b,c,d,e,f,g...usko fold kia toh a,g,b,f,c,e,d....and
+        // isko unfold krna hai toh a,b,c,d...and g,f,e toh ab is g,f,e ko reverse kr k
+        // a,b,c,d k sath link kr lenge and c1.next=nhead se hum link hi krrhe hai...so
+        // our unfolded list would be ...a,b,c,d,e,f,g
 
     }
 
