@@ -1,3 +1,5 @@
+package LinkedList;
+
 public class LinkedList {
     public static class ListNode {
         int val = 0;
@@ -224,7 +226,27 @@ public class LinkedList {
     } // add mergetwolists
 
     public static ListNode segregateEvenOdd(ListNode head) {
-        return null;
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode even = new ListNode(-1), odd = new ListNode(-1);
+        ListNode ep = even, op = odd, curr = head;
+
+        while (curr != null) {
+            if (curr.val % 2 != 0) {
+                op.next = curr;
+                op = op.next;
+            } else {
+                ep.next = curr;
+                ep = ep.next;
+            }
+            curr = curr.next;
+        }
+        ep.next = null;
+        op.next = null;
+        ep.next = odd.next;
+        return even.next;
+
     }
 
     public static ListNode removeNthFromEnd(ListNode head, int n) {
