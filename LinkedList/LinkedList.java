@@ -225,6 +225,7 @@ public class LinkedList {
         return mergeTwoLists(mergeKLists_03(arr, si, mid), mergeKLists_03(arr, mid + 1, ei));
     } // add mergetwolists
 
+    // Segregate Even And Odd Nodes In A Linkedlist
     public static ListNode segregateEvenOdd(ListNode head) {
         if (head == null || head.next == null)
             return head;
@@ -249,6 +250,7 @@ public class LinkedList {
 
     }
 
+    // Remove Nth Node From End Of Linkedlist
     public static ListNode removeNthFromEnd(ListNode head, int n) {
         if (head == null)
             return head;
@@ -265,11 +267,28 @@ public class LinkedList {
         }
 
         ListNode dNode = prev.next;
-        prev.next = null;
+        prev.next = dNode.next;
 
-        dNode.next = null;
+        dNode.next = null; // delete dNode
+
         return dummy.next;
+    }
 
+    // Is Cycle Present In Linkedlist
+    public static boolean isCyclePresentInLL(ListNode head) {
+        if (head == null || head.next == null)
+            return false;
+
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast)
+                return true;
+        }
+        return false;
     }
 
 }
