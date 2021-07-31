@@ -1,6 +1,6 @@
-package Trees;
+package Level2.Trees;
 
-import LinkedList.LinkedList;
+import Level2.LinkedList.LinkedList;
 
 public class ViewSet {
 

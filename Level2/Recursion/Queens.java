@@ -1,4 +1,4 @@
-package Recursion;
+package Level2.Recursion;
 // nqueens(combination)
 
 // import java.io;

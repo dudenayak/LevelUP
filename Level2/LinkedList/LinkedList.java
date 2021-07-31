@@ -1,4 +1,4 @@
-package LinkedList;
+package Level2.LinkedList;
 
 public class LinkedList {
     public static class ListNode {

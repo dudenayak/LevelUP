@@ -419,5 +419,40 @@ public class Main {
             this.size = prev.size;
 
         }
+
+        // Display Reverse (recursive) - Linked List
+        private void displayReverseHelper(Node node) {
+            if (node == null) {
+                return;
+            }
+            displayReverseHelper(node.next);
+            System.out.print(node.data + " ");
+        }
+
+        // Reverse Linked List (pointer - Recursive)
+        private void reversePRHelper(Node node) {
+            if (node == null) {
+                return;
+            }
+            reversePRHelper(node.next);
+            if (node == tail) {
+                // nothing to do
+            } else {
+                node.next.next = node;
+            }
+        }
+
+        public void reversePR() {
+            reversePRHelper(head);
+            head.next = null;
+            Node temp = head;
+            head = tail;
+            tail = temp;
+        }
+
+        // Is Linked List A Palindrome?
+        public boolean IsPalindrome() {
+            // write your code here
+        }
     }
 }
