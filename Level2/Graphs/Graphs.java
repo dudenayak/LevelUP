@@ -138,8 +138,44 @@ public class Graphs {
         return myAns;
     }
 
-    public static void hamintonainPathandCycle(ArrayList<Edge>[] graph, int src, ArrayList<String> ans) {
+    public static void hamintonainPathandCycle(ArrayList<Edge>[] graph, int src, int osrc, int edgeCount, boolean[] vis,
+            String psf, ArrayList<String> ans) {
+        if (edgeCount == graph.length - 1) {
+            psf += src;
+            int idx = findEdge(graph, src, osrc);
+            if (idx != -1)
+                psf += '*';
 
+            ans.add(psf);
+            return;
+        }
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                hamintonainPathandCycle(graph, e.v, osrc, edgeCount + 1, vis, psf + src, ans);
+        }
+        vis[src] = false;
+
+    }
+
+    // get connected components
+    public static void dfs_compo(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        vis[src] = true;
+        for (Edge e : graph[src])
+            if (!vis[e.v])
+                dfs_compo(graph, e.v, vis);
+    }
+
+    public static void gcc(ArrayList<Edge>[] graph) {
+        int N = graph.length;
+        boolean[] vis = new boolean[N];
+        int components = 0;
+        for (int i = 0; i < N; i++) {
+            if (!vis[i]) {
+                components++;
+                dfs_compo(graph, i, vis);
+            }
+        }
     }
 
     public static void constructGraph() {
