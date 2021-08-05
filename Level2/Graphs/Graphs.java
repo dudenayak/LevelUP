@@ -2,6 +2,8 @@ package Level2.Graphs;
 
 import java.util.ArrayList;
 
+import java.util.LinkedList;
+
 public class Graphs {
     public static class Edge {
         int v, w;
@@ -175,6 +177,104 @@ public class Graphs {
                 components++;
                 dfs_compo(graph, i, vis);
             }
+        }
+    }
+
+    // BFS==============================================================================
+
+    public static void bfs(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        LinkedList<Integer> que = new LinkedList<>();
+        que.add(src);
+
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.println("Level:" + level + " ->");
+
+            while (size-- > 0) {
+                int vtx = que.removeFirst();
+                if (vis[vtx]) {
+                    System.out.println("cycle");
+                    continue;
+                }
+                System.out.print(vtx + ", ");
+
+                vis[vtx] = true;
+                for (Edge e : graph[vtx]) {
+                    if (!vis[e.v])
+                        que.addLast(e.v);
+                }
+            }
+            level++;
+            System.out.println();
+        }
+
+    }
+
+    public static void bfswithoutCycle(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        LinkedList<Integer> que = new LinkedList<>();
+        que.add(src);
+        vis[src] = true;
+
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.println("Level:" + level + " ->");
+
+            while (size-- > 0) {
+                int vtx = que.removeFirst();
+                System.out.print(vtx + ", ");
+
+                for (Edge e : graph[vtx]) {
+                    if (!vis[e.v]) {
+                        vis[e.v] = true;
+                        que.addLast(e.v);
+                    }
+                }
+            }
+            level++;
+            System.out.println();
+        }
+
+    }
+
+    public static void bipartite(ArrayList<Edge>[] graph, int src, int[] vis) {
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+
+        // No Color : -1 , Red : 0, Green : 1
+        int color = 0;
+        boolean isCycle = false, isBipartite = true;
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                int rvtx = que.removeFirst();
+                if (vis[rvtx] != -1) {
+                    isCycle = true;
+                    if (color != vis[rvtx]) // conflict
+                        isBipartite = false;
+                    continue;
+                }
+
+                vis[rvtx] = color;
+                for (Edge e : graph[rvtx]) {
+                    if (vis[e.v] == -1) {
+                        que.addLast(e.v);
+                    }
+                }
+            }
+
+            color = (color + 1) % 2;
+        }
+
+        if (!isCycle)
+            System.out.println("Bipartite Graph with no cycle");
+        else {
+            if (isBipartite)
+                System.out.println("Bipartite Graph with Even Length cycle");
+            else
+                System.out.println("Non Bipartite Graph with Odd Length cycle");
         }
     }
 
