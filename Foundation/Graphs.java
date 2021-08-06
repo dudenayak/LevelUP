@@ -1,11 +1,9 @@
 package Foundation;
 
 import java.io.*;
-import java.lang.Thread.State;
 import java.util.*;
 
 import Level2.Graphs.Graphs.pair;
-import jdk.internal.util.xml.impl.Pair;
 
 public class Graphs {
 
@@ -307,7 +305,7 @@ public class Graphs {
 
     while(queue.size()>0)
     {
-        // r m* w a*(remove,visit,work,add)
+        // r m* w a*(remove,visit,work,add unvisited neighbours)
         Pair rem = queue.removeFirst();
         if (visited[rem.v] == true) {
             continue;
@@ -322,4 +320,84 @@ public class Graphs {
         }
     }
 
+    // Is Graph Cyclic
+    boolean[] visited = new boolean[vtces];for(
+    int v = 0;v<vtces;v++)
+    {
+        if (visited[v] == false) {
+            // traverse
+            boolean cycle = isCyclic(graph, v, visited);
+            if (cycle) {
+                System.out.println(true);
+                return;
+            }
+        }
+    }System.out.println(false);
+
+    static class Pair {
+        int v;
+        String psf;
+
+        Pair(int v, String psf) {
+            this.v = v;
+            this.psf = psf;
+        }
+    }
+
+    public static boolean isCyclic(ArrayList<Edge>[] graph, int src, boolean[] visited){
+        ArrayDeque<Pair> q = new ArrayDeque<>();
+        q.add(new Pair(src, src + ""));
+
+        while(q.size()>0){
+            Pair rem = q.removeFirst();
+
+            if(visited[rem.v]==true){
+                return true;
+            }
+            visited[rem.v]= true;
+
+            for(Edge e: graph[rem.v]){
+                if(visited[e.nbr]==false){
+                    q.add(new Pair(e.nbr, rem.psf + e.nbr));
+                }
+            }
+        }
+        return false;
+    }
+
+    // Spread Of Infection
+    ArrayDeque<Pair> q = new ArrayDeque<>();q.add(new Pair(src,1));
+    int[] visited = new int[vtces];
+    int count = 0;
+
+    while(q.size()>0)
+    {
+        Pair rem = q.removeFirst();
+
+        if (visited[rem.v] > 0) {
+            continue;
+        }
+        visited[rem.v] = rem.time;
+        if (rem.time > t) {
+            break;
+        }
+        count++;
+
+        for (Edge e : graph[rem.v]) {
+            if (visited[e.nbr] == 0) {
+                q.add(new Pair(e.nbr, rem.time + 1));
+            }
+        }
+        System.out.println(count);
+    }
+
+    static class Pair {
+        int v;
+        int time;
+
+        Pair(int v, int time) {
+            this.v = v;
+            this.time = time;
+        }
+    }
 }
