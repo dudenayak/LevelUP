@@ -3,7 +3,10 @@ package Foundation;
 import java.io.*;
 import java.util.*;
 
+import org.graalvm.compiler.nodes.ReturnNode;
+
 import Level2.Graphs.Graphs.pair;
+import jdk.internal.module.SystemModuleFinders;
 
 public class Graphs {
 
@@ -399,5 +402,177 @@ public class Graphs {
             this.v = v;
             this.time = time;
         }
+    }
+
+    // Shortest Path In Weights
+    PriorityQueue<Pair> pq = new PriorityQueue<>();pq.add(new Pair(src,src+"",0));
+    boolean[] visited = new boolean[vtces];
+
+    while(pq.size()>0)
+    {
+        Pair rem = pq.remove();
+
+        if (visited[rem.v] == true) {
+            continue;
+        }
+        visited[rem.v] = true;
+
+        System.out.println(rem.v + " via " + rem.psf + " @ " + rem.wsf);
+
+        for (Edge e : graph[rem.v]) {
+            if (visited[e.nbr] == false) {
+                pq.add(new Pair(e.nbr, rem.psf + e.nbr, rem.wsf + e.wt));
+            }
+        }
+    }
+
+}
+
+public static class Pair implements Comparable<Pair> {
+    int v;
+    String psf;
+    int wsf;
+
+    Pair(int v, String psf, int wsf) {
+        this.v = v;
+        this.psf = psf;
+        this.wsf = wsf;
+    }
+
+    public int compareTo(Pair o) {
+        return this.wsf - o.wsf;
+    }
+
+    // Minimum Wire Required To Connect All Pcs
+    PriorityQueue<Pair> pq = new PriorityQueue<>();pq.add(new Pair(0,-1,0));
+    boolean[] visited = new boolean[vtces];
+
+    while(pq.size()>0)
+    {
+        Pair rem = pq.remove();
+
+        if (visited[rem.v] == true) {
+            continue;
+        }
+        visited[rem.v] = true;
+
+        if (rem.av != -1) {
+            System.out.println("[" + rem.v + "-" + rem.av + "@" + rem.wt + "]");
+        }
+
+        for (Edge e : graph[rem.v]) {
+            if (visited[e.nbr] == false) {
+                pq.add(new Pair(e.nbr, rem.v, e.wt));
+            }
+        }
+    }
+
+    // Order Of Compilation
+
+    boolean[] visited = new boolean[vtces];
+    Stack<Integer> st = new Stack<>();for(
+    int v = 0;v<vtces;v++)
+    {
+        if (visited[v] == false) {
+            topologicalSort(graph, v, visited, st);
+        }
+    }while(st.size()>0)
+    {
+        System.out.println(st.pop());
+    }
+   }
+
+   public static void topologicalSort(ArrayList<Edge>[] graph, int src, boolean[] visited, Stack<Integer> st ){
+       visited[src] =true;
+       for(Edge e: graph[src] ){
+           if(visited[e.nbr]==false){
+               topologicalSort(graph, e.nbr, visited, st);
+           }
+       }
+       st.push(src);
+   
+
+    // Iterative Depth First Traversal
+
+    public static class Pair {
+        int v;
+        String psf;
+
+        Pair(int v, String psf) {
+            this.v = v;
+            this.psf = psf;
+        }
+    }
+
+    boolean[] visited = new boolean[vtces];
+    Stack<Pair> st = new Stack<>();st.push(new Pair(src,src+""));
+
+    while(st.size()>0)
+    {
+        Pair rem = st.pop();
+
+        if (visited[rem.v] == true) {
+            continue;
+        }
+        visited[rem.v] = true;
+
+        System.out.println(rem.v + "@" + rem.psf);
+
+        for (Edge e : graph[rem.v]) {
+            if (visited[e.nbr] == false) {
+                st.push(new Pair(e.nbr, rem.psf + e.nbr));
+            }
+        }
+    }
+
+    // Is Graph Bipartite
+
+    public static class Pair {
+        int v;
+        String psf;
+        int level;
+
+        Pair(int v, String psf, int level) {
+            this.v = v;
+            this.psf = psf;
+            this.level = level;
+        }
+    }
+
+    int[] visited = new int[vtces];Arrays.fill(visited,-1);
+
+    for(
+    int v = 0;v<vtces;v++)
+    {
+        if (visited[v] == -1) {
+            boolean isCompBipartite = checkComponentForBipartiteness(graph, v, visited);
+            if (isCompBipartite == false) {
+                System.out.println(false);
+                return;
+            }
+        }
+    }System.out.println(true);
+
+    public static boolean checkComponentForBipartiteness(ArrayList<Edge>[] graph, int src, int[] visited){
+        ArrayDeque<Pair> q = new ArrayDeque<>();
+        q.add(new Pair(src, src+ "", 0));
+
+        while(q.size()>0){
+            Pair rem = q.removeFirst();
+
+            if(visited[rem.v] != -1){
+                if(rem.level != visited[rem.v]){
+                    return false;
+                }
+            } else {
+                visited[rem.v] = rem.level;
+            }
+            for(Edge e: graph[rem.v]){
+                if(visited[e.nbr] == -1){
+                    q.add(new Pair(e.nbr, rem.psf + e.nbr, rem.level + 1));
+                }
+            }
+        }
+        return true;
     }
 }
