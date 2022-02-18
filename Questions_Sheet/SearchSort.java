@@ -51,7 +51,7 @@ public class SearchSort {
     }
 
     // 2nd Approach
-    {
+    ArrayList<Long> find(long arr[], int n, int x) {
         long a1 = -1;
         long a2 = -1;
         for (int i = 0; i < n; i++) {
