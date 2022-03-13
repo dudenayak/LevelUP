@@ -182,4 +182,39 @@ public class Class1 {
         return mergeTwoLists(mergeKSortedList_03(arr, si, mid), mergeKSortedList_03(arr, mid + 1, ei));
     }
 
+    public ListNode seggregateEvenOdd(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode even = new ListNode(-1), odd = new ListNode(-1);
+        ListNode ep = even, op = odd, curr = head;
+        while (curr != null) {
+            if (curr.val % 2 != 0) {
+                op.next = curr;
+                op = op.next;
+            } else {
+                ep.next = curr;
+                ep = ep.next;
+            }
+            curr = curr.next;
+        }
+        ep.next = null;
+        op.next = null;
+        ep.next = odd.next;
+        return even.next;
+    }
+
+    public int length(ListNode head) {
+        int len = 0;
+        while (head != null) {
+            head = head.next;
+            len++;
+        }
+        return len;
+    }
+
+    public ListNode reverseInKGroup(ListNode head, int k) {
+        return null;
+    }
+
 }
