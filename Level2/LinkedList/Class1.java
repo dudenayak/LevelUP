@@ -1,5 +1,7 @@
 package Level2.LinkedList;
 
+import java.util.*;
+
 public class Class1 {
 
     public static class ListNode {
@@ -317,6 +319,205 @@ public class Class1 {
 
     public static ListNode quickSort(ListNode head) {
         return quickSort_(head)[0];
+    }
+
+    public static ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null)
+            return head;
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode prev = dummy, forw = dummy;
+        while (n-- > 0)
+            forw = forw.next;
+
+        // if (forw == null) {
+        // head = head.next;
+        // ListNode dNode = prev;
+        // dNode.next = null;
+        // return head;
+        // }
+
+        while (forw.next != null) {
+            forw = forw.next;
+            prev = prev.next;
+        }
+
+        ListNode dNode = prev.next;
+        prev.next = dNode.next;
+        dNode.next = null;
+        return dummy.next;
+    }
+
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null)
+            return l1 != null ? l1 : l2;
+
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+
+        ListNode dummy = new ListNode(-1), prev = dummy, c1 = l1, c2 = l2;
+        int carry = 0;
+
+        while (c1 != null || c2 != null || carry != 0) {
+            int sum = carry + (c1 != null ? c1.val : 0) + (c2 != null ? c2.val : 0);
+            carry = sum / 10;
+
+            prev.next = new ListNode(sum % 10);
+            prev = prev.next;
+
+            if (c1 != null)
+                c1 = c1.next;
+            if (c2 != null)
+                c2 = c2.next;
+        }
+
+        return reverse(dummy.next);
+    }
+
+    public static ListNode subtractTwoNumbers(ListNode l1, ListNode l2) {
+        if (l2 == null)
+            return l1;
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+
+        ListNode dummy = new ListNode(-1), prev = dummy, c1 = l1, c2 = l2;
+
+        int borrow = 0;
+        while (c1 != null) {
+            int sub = borrow + c1.val - (c2 != null ? c2.val : 0);
+            if (sub < 0) {
+                borrow = -1;
+                sub += 10;
+            } else
+                borrow = 0;
+
+            prev.next = new ListNode(sub);
+            prev = prev.next;
+
+            c1 = c1.next;
+            if (c2 != null)
+                c2 = c2.next;
+        }
+
+        ListNode head = reverse(dummy.next), curr = head;
+        while (curr != null && curr.val == 0) {
+            ListNode forw = curr.next;
+            curr.next = null;
+            curr = forw;
+        }
+
+        return curr != null ? curr : new ListNode(0);
+    }
+
+    public static ListNode isCyclePresentInLL(ListNode head) {
+        if (head == null && head.next == null)
+            return null;
+
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+
+            if (slow == fast)
+                break;
+        }
+
+        return fast;
+    }
+
+    public static ListNode CycleNode(ListNode head) {
+
+        ListNode meetingPoint = isCyclePresentInLL(head);
+        if (meetingPoint == null || meetingPoint.next == null)
+            return null;
+
+        ListNode slow = head, fast = meetingPoint;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        return slow;
+    }
+
+    public static void allVariablesOfCycle(ListNode head) {
+        ListNode meetingPoint = isCyclePresentInLL(head);
+        if (meetingPoint == null || meetingPoint.next == null)
+            return;
+
+        ListNode slow = head, fast = meetingPoint, intersectionPoint = null;
+        ;
+        int A = 0, mDash = 0;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+
+            if (fast == meetingPoint)
+                mDash++;
+            A++;
+        }
+
+        intersectionPoint = slow;
+        slow = meetingPoint;
+        slow = slow.next;
+        int cycleLen = 1;
+        while (slow != meetingPoint) {
+            slow = slow.next;
+            cycleLen++;
+        }
+
+        int B = 0, C = 0, m = 0;
+        if (A != 0 && mDash == 0 && meetingPoint == intersectionPoint) {
+            B = cycleLen;
+        } else {
+            C = A - mDash * cycleLen;
+            B = cycleLen - C;
+            m = mDash + 1; // resolved. conclusion : A >= C
+        }
+    }
+
+    public static ListNode removeDuplicates(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode prev = head, curr = head.next;
+        while (curr != null) {
+            while (curr != null && prev.val == curr.val) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                curr = forw;
+            }
+
+            prev.next = curr;
+            prev = prev.next;
+            if (curr != null)
+                curr = curr.next;
+        }
+
+        return head;
+    }
+
+    public static ListNode removeDuplicates(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode dummy = new ListNode(-1), prev = dummy, curr = head;
+        prev.next = curr;
+        while (curr != null) {
+            boolean isLoopRun = false;
+            while (curr.next != null && prev.next.val == curr.next.val) {
+                curr = curr.next;
+                isLoopRun = true;
+            }
+
+            prev.next = curr.next;
+            if (!isLoopRun)
+                prev = prev.next;
+            curr = curr.next;
+        }
+
+        return dummy.next;
     }
 
 }
