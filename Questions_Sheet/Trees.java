@@ -4,7 +4,7 @@ import Level2.Trees.BST.TreeNode;
 
 public class Trees {
 
-    // LEETCODE 543
+    // LEETCODE 543 Diameter of Binary Tree
     public int diameterOfBinaryTree(TreeNode root) {
         if (root == null)
             return 0;
@@ -20,7 +20,7 @@ public class Trees {
         return 1 + Math.max(height(root.left), height(root.right));
     }
 
-    // LEETCODE 226
+    // LEETCODE 226 Invert Binary Tree
     public TreeNode invertTree(TreeNode root) {
         if (root == null)
             return root;
@@ -35,7 +35,7 @@ public class Trees {
 
     }
 
-    // LEETCODE 572
+    // LEETCODE 572 Subtree of Another Tree
     public boolean isSubtree(TreeNode root, TreeNode subRoot) {
         if (root == null || subRoot == null) {
             return root == null && subRoot == null;
@@ -55,7 +55,7 @@ public class Trees {
         return false;
     }
 
-    // LEETCODE 938
+    // LEETCODE 938 Range Sum of BST
 
     public int rangeSumBST(TreeNode root, int low, int high) {
         if (root == null)
@@ -68,7 +68,7 @@ public class Trees {
         }
     }
 
-    // LEETCODE 101
+    // LEETCODE 101 Symmetric Tree
 
     public boolean isSymmetric(TreeNode root) {
         return root == null || isSymmetricHelp(root.left, root.right);
@@ -84,6 +84,8 @@ public class Trees {
 
         return isSymmetricHelp(left.left, right.right) && isSymmetricHelp(left.right, right.right);
     }
+
+    // LEETCODE 108 Convert Sorted Array to Binary Search Tree
 
     public TreeNode sortedArrayToBST(int[] nums) {
         return Helper(nums, 0, nums.length - 1);
@@ -101,4 +103,60 @@ public class Trees {
         root.right = Helper(nums, mid + 1, end);
         return root;
     }
+
+    // LEETCODE 617 Merge Two Binary Trees
+
+    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+
+        if (root1 == null && root2 == null)
+            return null;
+        if (root1 == null)
+            return root2;
+        if (root2 == null)
+            return root1;
+
+        int val1 = root1.val;
+        int val2 = root2.val;
+
+        TreeNode root3 = new TreeNode(val1 + val2);
+
+        root3.left = mergeTrees(root1.left, root2.left);
+        root3.right = mergeTrees(root1.right, root2.right);
+
+        return root3;
+
+    }
+
+    // LEETCODE 104 Maximum Depth of Binary Tree
+
+    public int maxDepth(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+
+    }
+
+    // LEETCODE 257 Binary Tree Paths
+    List<String> list = new ArrayList<>();
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        solution(root, "");
+        return list;
+    }
+
+    public void solution(TreeNode root, String str) {
+        if (root.left == null && root.right == null) {
+            str = str + Integer.toString(root.val);
+            list.add(str);
+            return;
+        }
+
+        str = str + Integer.toString(root.val) + "->";
+        if (root.left != null)
+            solution(root.left, str);
+        if (root.right != null)
+            solution(root.right, str);
+    }
+
 }
