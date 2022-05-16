@@ -196,4 +196,59 @@ public class Trees {
             return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val);
     }
 
+    // LEETCODE 530 Minimum Absolute Difference in BST
+    private int prevVal = Integer.MAX_VALUE;
+    private int minDiff = Integer.MAX_VALUE;
+
+    public int getMinimumDifference(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        getMinimumDifference(root.left);
+        minDiff = Math.min(minDiff, Math.abs(prevVal - root.val));
+        prevVal = root.val;
+        getMinimumDifference(root.right);
+        return minDiff;
+
+    }
+
+    // LEETCODE 404 Sum of Left Leaves
+
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) {
+            return 0;
+        } else if (root.left != null && root.left.left == null && root.left.right == null) {
+            return root.left.val + sumOfLeftLeaves(root.right);
+        } else {
+            return sumOfLeftLeaves(root.left) + sumOfLeftLeaves(root.right);
+        }
+    }
+
+    // LEETCODE 110 Balanced Binary Tree
+
+    public boolean isBalanced(TreeNode root) {
+        if (root == null)
+            return true;
+        if (root.left == null && root.right == null)
+            return true;
+
+        boolean balance = true;
+        if (Math.abs(getHeight(root.left) - getHeight(root.right)) <= 1) {
+            balance = true;
+        } else {
+            balance = false;
+        }
+        if (!balance)
+            return false;
+        return isBalanced(root.left) && isBalanced(root.right);
+    }
+
+    public int getHeight(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        return 1 + Math.max(getHeight(root.left), getHeight(root.right));
+    }
+
+    // GFG Predecessor and Successor
 }
