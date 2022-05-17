@@ -1,5 +1,7 @@
 package Questions_Sheet;
 
+import java.util.ArrayList;
+
 import Level2.Trees.BST.TreeNode;
 
 public class Trees {
@@ -251,4 +253,41 @@ public class Trees {
     }
 
     // GFG Predecessor and Successor
+
+    public static void findPreSuc(Node root, Res p, Res s, int key) {
+        if (root == null)
+            return;
+        if (root.key == key) {
+            if (root.left)
+                p = inpre(root);
+            if (root.right)
+                s = inpre(root);
+            return;
+        }
+        if (key > root.key) {
+            p = root;
+            findPreSuc(root.right, p, s, key);
+        } else if (key < root.key) {
+            s = root;
+            findPreSuc(root.left, p, s, key);
+        }
+
+    }
+
+    // LEETCODE 94 Binary Tree Inorder Traversal
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        inorder(root, list);
+        return list;
+    }
+
+    public void inorder(TreeNode root, List<Integer> list) {
+        if (root == null)
+            return;
+        inorder(root.left, list);
+        list.add(root.val);
+        inorder(root.right, list);
+
+    }
 }
