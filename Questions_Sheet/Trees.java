@@ -2,6 +2,8 @@ package Questions_Sheet;
 
 import java.util.*;
 
+import org.w3c.dom.Node;
+
 import Level2.Trees.BST.TreeNode;
 
 public class Trees {
@@ -289,5 +291,149 @@ public class Trees {
         list.add(root.val);
         inorder(root.right, list);
 
+    }
+
+    // GFG Check Whether BST Contains Dead End
+
+    public static boolean solve(Node root, int min, int max) {
+        if (root == null)
+            return false;
+        if (min == max)
+            return true;
+        return solve(root.left, min, root.data - 1) || solve(root.right, root.data + 1, max);
+    }
+
+    public static boolean isDeadEnd(Node root) {
+        // Add your code here.
+        return solve(root, 1, Integer.MAX_VALUE);
+
+    }
+
+    // LEETCODE 173. Binary Search Tree Iterator
+    private Stack<TreeNode> stack = new Stack<TreeNode>();
+
+    public BSTIterator(TreeNode root) {
+        pushAll(root);
+    }
+
+    public int next() {
+        TreeNode temp = stack.pop();
+        pushAll(temp.right);
+        return temp.val;
+    }
+
+    public boolean hasNext() {
+        return !stack.isEmpty();
+    }
+
+    private void pushAll(TreeNode root) {
+        for (; root != null; stack.push(root), root = root.left)
+            ;
+    }
+
+    // LEETCODE 236. Lowest Common Ancestor of a Binary Tree
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q)
+            return root;
+
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        if (left != null && right != null)
+            return root;
+        if (left != null)
+            return left;
+        return right;
+    }
+
+    // LEETCODE 95. Unique Binary Search Trees II
+
+    public List<TreeNode> generateTrees(int n) {
+        return helper(1, n);
+    }
+
+    public List<TreeNode> helper(int start, int end) {
+        if (start > end) {
+            List<TreeNode> base = new ArrayList<>();
+            base.add(null);
+            return base;
+        }
+
+        List<TreeNode> ans = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            List<TreeNode> left = helper(start, i - 1);
+            List<TreeNode> right = helper(i + 1, end);
+            for (TreeNode l : left) {
+                for (TreeNode r : right) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = l;
+                    root.right = r;
+                    ans.add(root);
+                }
+            }
+        }
+        return ans;
+    }
+
+    // LEETCODE 863. All Nodes Distance K in Binary Tree
+
+    boolean nodeToRootPath_(TreeNode root, int data, ArrayList<TreeNode> ans) {
+
+        if (root == null)
+            return false;
+
+        if (root.val == data) {
+            ans.add(root);
+            return true;
+        }
+
+        boolean res = nodeToRootPath_(root.left, data, ans) || nodeToRootPath_(root.right, data, ans);
+
+        if (res)
+            ans.add(root);
+        return res;
+    }
+
+    public void kdown(TreeNode root, int k, TreeNode block, List<Integer> ans) {
+        if (root == null || k < 0 || root == block)
+            return;
+
+        if (k == 0) {
+            ans.add(root.val);
+            return;
+        }
+
+        kdown(root.left, k - 1, block, ans);
+        kdown(root.right, k - 1, block, ans);
+    }
+
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+
+        ArrayList<TreeNode> path = new ArrayList<>();
+        nodeToRootPath_(root, target.val, path);
+        List<Integer> ans = new ArrayList<>();
+        TreeNode block = null;
+        for (int i = 0; i < path.size(); i++) {
+            kdown(path.get(i), k - i, block, ans);
+            block = path.get(i);
+        }
+        return ans;
+    }
+
+    // LEETCODE 98. Validate Binary Search Tree
+
+    public boolean isValidBST(TreeNode root) {
+        return Validate(root, null, null);
+    }
+
+    public boolean Validate(TreeNode root, Integer max, Integer min) {
+        if (root == null) {
+            return true;
+        } else if (max != null && root.val >= max || min != null && root.val <= min) {
+            return false;
+        } else {
+            return Validate(root.left, root.val, min) && Validate(root.right, max, root.val);
+        }
     }
 }
