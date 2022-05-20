@@ -1,6 +1,7 @@
 package Questions_Sheet;
 
 import java.util.*;
+import java.util.LinkedList;
 
 import org.w3c.dom.Node;
 
@@ -435,5 +436,64 @@ public class Trees {
         } else {
             return Validate(root.left, root.val, min) && Validate(root.right, max, root.val);
         }
+    }
+
+    // LEETCODE 199. Binary Tree Right Side View
+
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> visibleValue = new ArrayList<>();
+        if (root == null)
+            return visibleValue;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode current = queue.remove();
+                if (i == size - 1) {
+                    visibleValue.add(current.val);
+                }
+                if (current.left != null) {
+                    queue.add(current.left);
+                }
+                if (current.right != null) {
+                    queue.add(current.right);
+                }
+            }
+        }
+        return visibleValue;
+    }
+
+    // LEETCODE 684. Redundant Connection
+
+    public int[] findRedundantConnection(int[][] edges) {
+        int[] dSet = new int[1001];
+
+        for (int i = 0; i < dSet.length; i++) {
+            dSet[i] = i;
+        }
+
+        for (int i = 0; i < edges.length; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+
+            while (u != dSet[u]) {
+                u = dSet[u];
+            }
+
+            while (v != dSet[v]) {
+                v = dSet[v];
+            }
+
+            if (v == u) {
+                return edges[i];
+            }
+
+            else {
+                dSet[v] = u;
+            }
+        }
+        return new int[] { -1, -1 };
     }
 }
