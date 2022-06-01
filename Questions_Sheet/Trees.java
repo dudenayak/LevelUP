@@ -523,4 +523,29 @@ public class Trees {
         }
         return res;
     }
+
+    // LEETCODE 437. Path Sum III
+
+    public int pathSumm(TreeNode root, int targetSum) {
+        if (root == null)
+            return 0;
+        int res = 0;
+        if (root.val == targetSum)
+            res++;
+        res += pathSumm(root.left, targetSum - root.val);
+        res += pathSumm(root.right, targetSum - root.val);
+        return res;
+    }
+
+    public int pathSum(TreeNode root, int targetSum) {
+        if (root == null)
+            return 0;
+        return pathSum(root.left, targetSum) + pathSumm(root, targetSum) + pathSum(root, right, targetSum);
+    }
+
+    // LEETCODE 889. Construct Binary Tree from Preorder and Postorder Traversal
+
+    public TreeNode constructFromPrePost(int[] preorder, int[] postorder) {
+
+    }
 }
