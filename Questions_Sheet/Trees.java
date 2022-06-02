@@ -3,8 +3,6 @@ package Questions_Sheet;
 import java.util.*;
 import java.util.LinkedList;
 
-import org.w3c.dom.Node;
-
 import Level2.Trees.BST.TreeNode;
 
 public class Trees {
@@ -546,6 +544,314 @@ public class Trees {
     // LEETCODE 889. Construct Binary Tree from Preorder and Postorder Traversal
 
     public TreeNode constructFromPrePost(int[] preorder, int[] postorder) {
+        int n = preorder.length;
+        return createTree(preorder, postorder, 0, n - 1, 0, n - 1);
+    }
+
+    public TreeNode createTree(int[] preorder, int[] post, int prs, int pre, int pos, int poe) {
+        if (prs > pre) {
+            return null;
+        }
+        if (prs == pre) {
+            return new TreeNode(preorder[prs]);
+        }
+        TreeNode node = new TreeNode(preorder[prs]);
+        int val = preorder[prs + 1];
+        int idx = -1;
+        for (int i = pos; i <= poe; i++) {
+            if (post[i] == val) {
+                idx = i;
+                break;
+            }
+        }
+        // colse - count of left subtree elements
+        int colse = idx - pos + 1;
+        node.left = createTree(preorder, post, prs + 1, prs + colse, pos, idx);
+        node.right = createTree(preorder, post, prs + colse + 1, pre, idx + 1, poe - 1);
+        return node;
+    }
+
+    // LEETCODE 96. Unique Binary Search Trees
+
+    public int numTrees(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            for (int j = 1; j <= i; j++) {
+                dp[i] += dp[j - 1] * dp[i - j];
+            }
+        }
+        return dp[n];
+    }
+
+    // LEETCODE 99. Recover Binary Search Tree
+
+    TreeNode firstPtr = null;
+    TreeNode lastPtr = null;
+    TreeNode prevPtr = null;
+
+    public void recoverTree(TreeNode root) {
+        inOrderTraversal(root);
+
+        int temp = firstPtr.val;
+        firstPtr.val = lastPtr.val;
+        lastPtr.val = temp;
+    }
+
+    private void inOrderTraversal(TreeNode root) {
+        if (root.left != null) {
+            inOrderTraversal(root.left);
+        }
+
+        if (prevPtr != null) {
+            if (prevPtr.val >= root.val) {
+                if (firstPtr == null) {
+                    firstPtr = prevPtr;
+                }
+                lastPtr = root;
+            }
+        }
+
+        prevPtr = root;
+
+        if (root.right != null) {
+            inOrderTraversal(root.right);
+        }
+    }
+
+    // LEETCODE 116. Populating Next Right Pointers in Each Node
+
+    public Node connect(Node root) {
+        if (root == null)
+            return root;
+
+        Node curr = root;
+        while (curr != null) {
+            Node head = new Node();
+            Node prev = head;
+
+            while (curr != null) {
+                if (curr.left != null) {
+                    prev.next = curr.left;
+                    prev = prev.next;
+                }
+                if (curr.right != null) {
+                    prev.next = curr.right;
+                    prev = prev.next;
+                }
+                curr = curr.next;
+            }
+            curr = head.next;
+        }
+        return root;
 
     }
+
+    // LEETCODE 114. Flatten Binary Tree to Linked List
+
+    public void flatten(TreeNode root) {
+        if (root == null)
+            return;
+        if (root.left != null) {
+            TreeNode leftRightMost = root.left;
+            while (leftRightMost.right != null)
+                leftRightMost = leftRightMost.right;
+            TreeNode rootRight = root.right;
+            root.right = root.left;
+            leftRightMost.right = rootRight;
+            root.left = null;
+        }
+        flatten(root.right);
+    }
+
+    // LEETCODE 662. Maximum Width of Binary Tree
+
+    class Pair {
+        TreeNode node;
+        int index;
+
+        Pair(TreeNode node, int index) {
+            this.index = index;
+            this.node = node;
+        }
+    }
+
+    class Solution {
+        public int widthOfBinaryTree(TreeNode root) {
+            Queue<Pair> q = new LinkedList<>();
+            int ans = Integer.MIN_VALUE;
+            q.add(new Pair(root, 0));
+            while (q.isEmpty() == false) {
+                int size = q.size();
+                int minSizeOfLevel = q.peek().index;
+                for (int i = 0; i < size; i++) {
+                    Pair p = q.poll();
+                    int id = p.index - minSizeOfLevel;
+                    if (p.node.left != null)
+                        q.offer(new Pair(p.node.left, (2 * id + 1)));
+                    if (p.node.right != null)
+                        q.offer(new Pair(p.node.right, (2 * id + 2)));
+                    if (i == size - 1) {
+                        ans = Math.max((p.index - minSizeOfLevel) + 1, ans);
+                    }
+                }
+            }
+            return ans;
+        }
+    }
+
+    // LEETCODE 230. Kth Smallest Element in a BST
+
+    private int count = 0;
+    private int ans = 0;
+
+    private void helper(TreeNode root, int k) {
+        if (root == null)
+            return;
+        helper(root.left, k);
+        ans++;
+        if (ans == k) {
+            count = root.val;
+            return;
+        }
+        helper(root.right, k);
+    }
+
+    public int kthSmallest(TreeNode root, int k) {
+        helper(root, k);
+        return count;
+    }
+
+    // LEETCODE 103. Binary Tree Zigzag Level Order Traversal
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ans = new LinkedList<List<Integer>>();
+        if (root == null)
+            return ans;
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        q.add(root);
+        int level = 0;
+        while (!q.isEmpty()) {
+            LinkedList<Integer> temp = new LinkedList<>();
+            int length = q.size();
+            for (int i = 0; i < length; i++) {
+                TreeNode node = q.poll();
+                if (level % 2 == 0)
+                    temp.add(node.val);
+                else
+                    temp.addFirst(node.val);
+                if (node.left != null)
+                    q.add(node.left);
+                if (node.right != null)
+                    q.add(node.right);
+
+            }
+            ans.add(temp);
+            level++;
+        }
+        return ans;
+    }
+
+    // GFG Min distance between two given nodes of a Binary Tree
+
+    class GfG {
+        Node LCA(Node root, int n1, int n2) {
+            if (root == null)
+                return null;
+
+            if (root.data == n1 || root.data == n2)
+                return root;
+
+            Node l = LCA(root.left, n1, n2);
+            Node r = LCA(root.right, n1, n2);
+
+            if (l != null && r != null)
+                return root;
+
+            if (l == null && r == null)
+                return null;
+
+            return (l != null) ? l : r;
+        }
+
+        int findDist(Node root, int a, int b) {
+            int x = pathLength(root, a) - 1;
+            int y = pathLength(root, b) - 1;
+
+            int lcadata = LCA(root, a, b).data;
+            int lcaDistance = pathLength(root, lcadata) - 1;
+            return (x + y) - 2 * lcaDistance;
+        }
+
+        int pathLength(Node root, int n1) {
+            if (root == null)
+                return 0;
+            else {
+                int x = 0;
+                if ((root.data == n1) || (x = pathLength(root.left, n1)) > 0 ||
+                        (x = pathLength(root.right, n1)) > 0)
+                    return x + 1;
+            }
+
+            return 0;
+        }
+    }
+
+    // GFG Count BST nodes that lie in a given range
+
+    class Solution {
+
+        int getCount(Node node, int low, int high) {
+            if (node == null)
+                return 0;
+
+            if (node.data == high && node.data == low)
+                return 1;
+
+            if (node.data >= low && node.data <= high)
+                return 1 + this.getCount(node.left, low, high) +
+                        this.getCount(node.right, low, high);
+
+            else if (node.data < low)
+                return this.getCount(node.right, low, high);
+
+            else
+                return this.getCount(node.left, low, high);
+        }
+    }
+
+    // GFG Preorder to Postorder
+
+    public static Node post_order(int pre[], int size) {
+        int[] in = Arrays.copyOf(pre, pre.length);
+        Arrays.sort(in);
+        int[] idx = { 0 };
+        Node head = createbst(in, pre, 0, size - 1, idx);
+        return head;
+    }
+
+    public static Node createbst(int[] in, int[] pre, int i, int j, int[] idx) {
+        if (i > j) {
+            return null;
+        }
+        Node temp = new Node(pre[idx[0]]);
+        int t = find(in, temp.data, i, j);
+        int nw = idx[0];
+        idx[0] = nw + 1;
+        temp.left = createbst(in, pre, i, t - 1, idx);
+        temp.right = createbst(in, pre, t + 1, j, idx);
+        return temp;
+    }
+
+    public static int find(int[] in, int x, int i, int j) {
+
+        for (int k = i; k <= j; k++) {
+            if (in[k] == x) {
+                return k;
+            }
+        }
+        return -1;
+    }
+
 }
