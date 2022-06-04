@@ -62,7 +62,22 @@ public class Arrays {
     // LEETCODE 73. Set Matrix Zeroes
 
     public void setZeroes(int[][] matrix) {
-
+        boolean[] row = new boolean[matrix.length];
+        boolean[] col = new boolean[matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == 0) {
+                    row[i] = true;
+                    col[j] = true;
+                }
+            }
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (col[j] == true || row[i] == true) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
     }
-
 }
