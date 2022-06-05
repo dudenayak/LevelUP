@@ -80,4 +80,126 @@ public class Arrays {
             }
         }
     }
+
+    // LEETCODE 283. Move Zeroes
+
+    public void moveZeroes(int[] nums) {
+        int i = 0;
+        for (int j = 1; j < nums.length; j++) {
+            if (nums[i] != 0) {
+                i++;
+            } else if (nums[j] != 0) {
+                nums[i++] = nums[j];
+                nums[j] = 0;
+            }
+        }
+    }
+
+    // LEETCODE 121. Best Time to Buy and Sell Stock
+
+    public int maxProfit(int[] prices) {
+        int min = Integer.MAX_VALUE;
+        int profit = 0;
+
+        for (int i = 0; i < prices.length; i++) {
+            if (prices[i] < min) {
+                min = prices[i];
+            } else if (prices[i] - min > profit) {
+                profit = prices[i] - min;
+            }
+        }
+        return profit;
+    }
+
+    // GFG Chocolate Distribution Problem
+
+    public static int findMinDiff(int arr[], int n, int m) {
+        if (m == 0 || n == 0)
+            return 0;
+
+        Arrays.sort(arr);
+
+        if (n < m)
+            return -1;
+
+        int mindiff = Integer.MAX_VALUE;
+
+        for (int i = 0; i + m - 1 < n; i++) {
+            int diff = arr[i + m - 1] - arr[i];
+            if (diff < mindiff)
+                mindiff = diff;
+        }
+        return mindiff;
+    }
+
+    // LEETCODE 1. Two Sum
+
+    public int[] twoSum(int[] nums, int target) {
+        int ans[] = new int[2];
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if ((nums[i] + nums[j]) == target) {
+                    ans[0] = i;
+                    ans[1] = j;
+                }
+            }
+        }
+        return ans;
+    }
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
+
+    // LEETCODE
 }
