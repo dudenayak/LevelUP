@@ -1,5 +1,7 @@
 package Questions_Sheet;
 
+import java.util.ArrayList;
+
 public class Arrays {
 
     // LEETCODE 287. Find the Duplicate Number
@@ -147,13 +149,67 @@ public class Arrays {
         return ans;
     }
 
-    // LEETCODE
+    // LEETCODE 122. Best Time to Buy and Sell Stock II
 
-    // LEETCODE
+    public int maxProfit(int[] prices) {
+        int profit = 0;
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1]) {
+                profit += prices[i] - prices[i - 1];
+            }
+        }
+        return profit;
+    }
 
-    // LEETCODE
+    // LEETCODE 974. Subarray Sums Divisible by K
 
-    // LEETCODE
+    public int subarraysDivByK(int[] nums, int k) {
+        int[] count = new int[k];
+        int sum = 0;
+        for (int i : nums) {
+            sum += ((i % k) + k) % k;
+            count[sum % k]++;
+        }
+
+        int res = count[0];
+        for (int j : count) {
+            res += (j * (j - 1)) / 2;
+        }
+        return res;
+
+    }
+
+    // LEETCODE 442. Find All Duplicates in an Array
+
+    public List<Integer> findDuplicates(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            int idx = Math.abs(nums[i]) - 1;
+            if (nums[idx] < 0) {
+                list.add(idx + 1);
+            }
+            nums[idx] = -nums[idx];
+        }
+        return list;
+    }
+
+    // LEETCODE 11. Container With Most Water
+
+    public int maxArea(int[] height) {
+        int max = Integer.MIN_VALUE;
+        int i = 0;
+        int j = height.length - 1;
+        while (i < j) {
+            int min = Math.min(height[i], height[j]);
+            max = Math.max(max, min * (j - i));
+            if (height[i] < height[j]) {
+                i++;
+            } else {
+                j--;
+            }
+        }
+        return max;
+    }
 
     // LEETCODE
 
