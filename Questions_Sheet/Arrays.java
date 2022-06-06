@@ -1,6 +1,7 @@
 package Questions_Sheet;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Arrays {
 
@@ -211,9 +212,55 @@ public class Arrays {
         return max;
     }
 
-    // LEETCODE
+    // LEETCODE 15. 3Sum
 
-    // LEETCODE
+    public List<List<Integer>> threeSum(int[] nums) {
+        HashSet<List<Integer>> set = new HashSet<>();
+        Arrays.sort(nums);
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            int low = i + 1;
+            int high = nums.length - 1;
+            while (low < high) {
+                int sum = nums[i] + nums[low] + nums[high];
+                if (sum == 0) {
+                    set.add(List.of(nums[i], nums[low], nums[high]));
+                }
+                if (sum > 0)
+                    high--;
+                else
+                    low++;
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    // LEETCODE 18. 4Sum
+    // gives TLE
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        HashSet<List<Integer>> set = new HashSet<>();
+        int low = 0, high = 0;
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 3; i++) {
+            for (int j = i + 1; i < nums.length - 2; j++) {
+                low = j + 1;
+                high = nums.length - 1;
+                while (low < high) {
+                    int sum = nums[i] + nums[j] + nums[low] + nums[high];
+                    if (sum == target) {
+                        set.add(Arrays.asList(new Integer[] { nums[i], nums[j], nums[low], nums[high] }));
+                        low++;
+                        high--;
+                    } else if (sum < target)
+                        low++;
+                    else
+                        high--;
+                }
+            }
+        }
+        return new ArrayList<List<Integer>>(set);
+    }
 
     // LEETCODE
 
