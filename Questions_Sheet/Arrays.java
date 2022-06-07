@@ -262,6 +262,44 @@ public class Arrays {
         return new ArrayList<List<Integer>>(set);
     }
 
+    // optimized solution
+
+    class Solution {
+        public List<List<Integer>> fourSum(int[] nums, int target) {
+            int n = nums.length;
+            Arrays.sort(nums);
+            HashSet<ArrayList<Integer>> set = new HashSet<>();
+            List<List<Integer>> res = new ArrayList<>();
+            for (int i = 0; i < n - 3; i++) {
+                for (int j = i + 1; j < n - 2; j++) {
+                    int sum = nums[i] + nums[j];
+                    int l = j + 1;
+                    int r = n - 1;
+                    while (l < r) {
+                        if (sum + nums[l] + nums[r] == target) {
+                            ArrayList<Integer> list = new ArrayList<>();
+                            list.add(nums[i]);
+                            list.add(nums[j]);
+                            list.add(nums[l]);
+                            list.add(nums[r]);
+                            if (!set.contains(list)) {
+                                res.add(list);
+                                set.add(list);
+                            }
+                            l++;
+                            r--;
+                        } else if (sum + nums[l] + nums[r] < target) {
+                            l++;
+                        } else {
+                            r--;
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+    }
+
     // LEETCODE
 
     // LEETCODE
