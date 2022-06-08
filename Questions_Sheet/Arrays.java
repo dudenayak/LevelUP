@@ -2,6 +2,9 @@ package Questions_Sheet;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
+
+import Foundation.HashMap;
 
 public class Arrays {
 
@@ -300,47 +303,170 @@ public class Arrays {
         }
     }
 
-    // LEETCODE
+    // LEETCODE 1423. Maximum Points You Can Obtain from Cards
 
-    // LEETCODE
+    public int maxScore(int[] cardPoints, int k) {
+        int n = cardPoints.length;
+        int[] left = new int[k + 1];
+        int[] right = new int[k + 1];
 
-    // LEETCODE
+        left[0] = 0;
+        right[0] = 0;
 
-    // LEETCODE
+        int startLeft = 0, startRight = 0;
+        for (int i = 0, j = n - 1; i < k && j >= n - k; i++, j--) {
+            startLeft = startLeft + cardPoints[i];
+            left[i + 1] = startLeft;
 
-    // LEETCODE
+            startRight = startRight + cardPoints[j];
+            right[i + 1] = startRight;
+        }
 
-    // LEETCODE
+        int sum = 0, maxSum = 0;
 
-    // LEETCODE
+        for (int i = 0, j = right.length - 1; i < left.length && j >= 0; i++, j--) {
+            sum = left[i] + right[j];
 
-    // LEETCODE
+            if (sum > maxSum)
+                maxSum = sum;
+        }
+        return maxSum;
+    }
 
-    // LEETCODE
+    // LEETCODE 560. Subarray Sum Equals K
+    // gives tle
 
-    // LEETCODE
+    public int subarraySum(int[] nums, int k) {
+        int count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int sum = 0;
+            for (int j = i; j < nums.length; j++) {
+                sum += nums[j];
+                if (sum == k)
+                    count++;
+            }
+        }
+        return count;
+    }
 
-    // LEETCODE
+    // optimized solution
 
-    // LEETCODE
+    public int subarraySum(int[] nums, int k) {
+        int sum = 0, count = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i : nums) {
+            sum += i;
+            if (sum == k)
+                count++;
+            if (map.containsKey(sum - k)) {
+                count += map.get(sum - k);
+            }
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+        return count;
+    }
 
-    // LEETCODE
+    // LEETCODE 54. Spiral Matrix
 
-    // LEETCODE
+    public List<Integer> spiralOrder(int[][] matrix) {
+        int[][] visited = new int[matrix.length][matrix[0].length];
+        List<Integer> ans = new ArrayList<>();
+        recursive(matrix, visited, 0, 0, ans);
+        return ans;
+    }
 
-    // LEETCODE
+    private void recursive(int[][] matrix, int[][] visited, int r, int c, List<Integer> ans) {
+        if (r < 0 || c < 0 || r > matrix.length - 1 || c > matrix[0].length - 1 || visited[r][c] == 1)
+            return;
 
-    // LEETCODE
+        visited[r][c] = 1;
+        ans.add(matrix[r][c]);
+        if (r == 0 || visited[r - 1][c] == 1)
+            recursive(matrix, visited, r, c + 1, ans);
+        recursive(matrix, visited, r + 1, c, ans);
+        recursive(matrix, visited, r, c - 1, ans);
+        recursive(matrix, visited, r - 1, c, ans);
 
-    // LEETCODE
+    }
 
-    // LEETCODE
+    // LEETCODE 79. Word Search
 
-    // LEETCODE
+    boolean ans;
 
-    // LEETCODE
+    public boolean exist(char[][] board, String word) {
+        int m = board.length, n = board[0].length;
+        ans = false;
+        boolean[][] visited = new boolean[m][n];
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                dfs(board, word, m, n, r, c, 0, visited);
+                if (ans)
+                    return true;
+            }
+        }
+        return false;
+    }
 
-    // LEETCODE
+    public void dfs(char[][] board, String word, int m, int n, int r, int c, int index, boolean[][] visited) {
+        if (r < 0 || c < 0 || r >= m || c >= n || visited[r][c] || board[r][c] != word.charAt(index))
+            return;
 
-    // LEETCODE
+        if (index == word.length() - 1) {
+            ans = true;
+            return;
+        }
+        visited[r][c] = true;
+        dfs(board, word, m, n, r + 1, c, index + 1, visited);
+        dfs(board, word, m, n, r, c + 1, index + 1, visited);
+        dfs(board, word, m, n, r - 1, c, index + 1, visited);
+        dfs(board, word, m, n, r, c - 1, index + 1, visited);
+        visited[r][c] = false;
+    }
+
+    // GFG Print all possible combinations of r elements in a given array of size n
+
+    public static void combination(int arr[], int data[], int start, int end, int index, int r) {
+        if (index == r) {
+            for (int i = 0; i < r; i++)
+                return;
+        }
+        for (int j = start; j <= end && end - i + 1 >= r - index; i++) {
+            data[index] = arr[i];
+            combination(arr, data, i + 1, end, index + 1, r);
+        }
+    }
+
+    public static void printCombi(int arr[], int n, int r) {
+        int data[] = new int[r];
+        combination(arr, data, 0, n - 1, 0, r);
+    }
+
+    // LEETCODE 55. Jump Game
+    public boolean canJump(int[] nums) {
+        int n = nums.length - 1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if (nums[i] + i >= n)
+                n = i;
+        }
+        return n == 0;
+    }
+
+    // LEETCODE 88. Merge Sorted Array
+
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        for (int i = m + n - 1, a = m - 1, b = n - 1; b >= 0; i--) {
+            if (a >= 0 && nums1[a] > nums2[b])
+                nums1[i] = nums1[a--];
+            else
+                nums1[i] = nums2[b--];
+        }
+    }
+
+    // LEETCODE 169. Majority Element
+
+    public int majorityElement(int[] nums) {
+        Arrays.sort(nums);
+        return nums[nums.length / 2];
+    }
+
 }
