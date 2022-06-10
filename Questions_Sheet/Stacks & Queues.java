@@ -2,6 +2,7 @@ package Questions_Sheet;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Stack;
 
 import Foundation.HashMap;
 
@@ -100,23 +101,52 @@ public class Stacks&Queues
     // LEETCODE 496. Next Greater Element I
 
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-        int nextGreater[] = nextGreaterRight(nums1);
-        HashMap<Integer, Integer> ans = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            ans.put(nums1[i], nextGreater[i]);
+        int res[] = new int[nums1.length];
+        for (int i = 0; i < nums1.length; i++) {
+            int num = nums1[i];
+            res[i] = check(num, nums2);
         }
-
-        int newAns[] = new int[nums2.length];
-
-        for (int i = 0; i < nums2.length; i++) {
-            newAns[i] = ans.get(nums[i]);
-        }
-        return newAns;
+        return res;
     }
 
-    // LEETCODE
+    public static int check(int num, int nums2[]) {
+        int index = 0;
+        for (int i = 0; i < nums2.length; i++)
+            if (num == nums2[i])
+                index = i;
+        for (int i = index + 1; i < nums2.length; i++)
+            if (nums2[i] > num)
+                return nums2[i];
+        return -1;
+    }
 
-    // LEETCODE
+    // LEETCODE 1130. Minimum Cost Tree From Leaf Values
+
+    public int mctFromLeafValues(int[] arr) {
+        if (arr == null && arr.length < 2)
+            return 0;
+        int ans = 0;
+        Stack<Integer> s = new Stack<>();
+
+        s.push(arr[0]);
+
+        for (int i = 1; i < arr.length; i++) {
+            while (s.size() != 0 && s.peek() <= arr[i]) {
+                int sv = s.pop();
+                int prev = (s.size() == 0) ? Integer.MAX_VALUE : s.peek();
+
+                ans += sv * Math.min(arr[i], prev);
+            }
+            s.push(arr[i]);
+        }
+
+        while (s.size() > 1) {
+            ans += s.pop() * s.peek();
+        }
+        return ans;
+    }
+
+    // LEETCODE 739. Daily Temperatures
 
     // LEETCODE
 
