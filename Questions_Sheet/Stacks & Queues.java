@@ -323,7 +323,67 @@ public class Stacks&Queues
 
     // LEETCODE 341. Flatten Nested List Iterator
 
+    public class NestedIterator implements Iterator<Integer> {
+
+        private List<Integer> integerList = new ArrayList<>();
+        private int index = 0;
+
+        public NestedIterator(List<NestedInteger> nestedList) {
+            for (NestedInteger nestedInteger : nestedList) {
+                flatten(nestedInteger);
+            }
+        }
+
+        private void flatten(NestedInteger nested) {
+            if (nested.isInteger())
+                integerList.add(nested.getInteger());
+            else
+                for (NestedInteger nestedFromList : nested.getList()) {
+                    flatten(nestedFromList);
+                }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index < integerList.size();
+        }
+
+        @Override
+        public Integer next() {
+            return integerList.get(index++);
+        }
+    }
+
     // LEETCODE 1209. Remove All Adjacent Duplicates in String II
+
+    class Solution {
+        public String removeDuplicates(String s, int k) {
+            Stack<int[]> stack = new Stack<>();
+
+            for (char ch : s.toCharArray()) {
+                if (stack.isEmpty() || stack.peek()[0] != ch) {
+                    stack.push(new int[] { ch, 1 });
+                } else {
+                    stack.peek()[1]++;
+                }
+                if (stack.peek()[1] == k) {
+                    stack.pop();
+                }
+            }
+            StringBuilder sb = new StringBuilder();
+            while (!stack.isEmpty()) {
+                int[] top = stack.peek();
+                while (top[1] > 0) {
+                    sb.append((char) top[0]);
+                    top[1]--;
+                }
+
+                stack.pop();
+            }
+
+            return sb.reverse().toString();
+        }
+    }
 
     // LEETCODE 150. Evaluate Reverse Polish Notation
 
