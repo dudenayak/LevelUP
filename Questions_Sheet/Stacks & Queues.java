@@ -321,11 +321,63 @@ public class Stacks&Queues
         return res;
     }
 
-    // LEETCODE
+    // LEETCODE 341. Flatten Nested List Iterator
 
-    // LEETCODE
+    // LEETCODE 1209. Remove All Adjacent Duplicates in String II
 
-    // LEETCODE
+    // LEETCODE 150. Evaluate Reverse Polish Notation
 
-    // LEETCODE
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for (String t : tokens) {
+            if (!"+-*/".contains(t)) {
+                stack.push(Integer.valueOf(t));
+            } else {
+                int b = stack.pop();
+                int a = stack.pop();
+                if (t.equals("+"))
+                    stack.push(a + b);
+                else if (t.equals("-"))
+                    stack.push(a - b);
+                else if (t.equals("*"))
+                    stack.push(a * b);
+                else if (t.equals("/"))
+                    stack.push(a / b);
+                else
+                    throw new RuntimeException("Unsupported operator: " + t);
+            }
+        }
+        return stack.pop();
+    }
+
+    // GFG Circular tour
+
+    class Solution {
+
+        int tour(int petrol[], int distance[]) {
+            int n = petrol.length;
+
+            int start = 0;
+            int end = 1;
+
+            int currPetrol = petrol[start] - distance[start];
+
+            while ((end != start || currPetrol < 0) && end < n) {
+
+                while (currPetrol < 0 && start != end && start < n) {
+
+                    currPetrol -= petrol[start] - distance[start];
+                    start = (start + 1) % n;
+
+                    if (start == 0)
+                        return -1;
+                }
+
+                currPetrol += petrol[end] - distance[end];
+                end = (end + 1) % n;
+            }
+
+            return start;
+        }
+    }
 }
