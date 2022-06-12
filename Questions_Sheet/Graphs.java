@@ -2,9 +2,31 @@ package Questions_Sheet;
 
 public class Graphs {
 
-    // GFG
+    // GFG BFS of graph
 
-    // GFG
+    public ArrayList<Integer> bfsOfGraph(int V, ArrayList<ArrayList<Integer>> adj) {
+        ArrayList<Integer> result = new ArrayList<>();
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[V];
+
+        Arrays.fill(visited, false);
+        queue.add(0);
+        visited[0] = true;
+
+        while (!queue.isEmpty()) {
+            int f = queue.poll();
+            result.add(f);
+            for (var nbr : adj.get(f)) {
+                if (!visited[nbr]) {
+                    queue.add(nbr);
+                    visited[nbr] = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    // GFG Depth First Search or DFS for a Graph
 
     // LEETCODE 200. Number of Islands
 
