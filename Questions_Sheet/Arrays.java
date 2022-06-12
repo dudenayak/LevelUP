@@ -1,10 +1,6 @@
 package Questions_Sheet;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-
-import Foundation.HashMap;
+import java.util.*;
 
 public class Arrays {
 
