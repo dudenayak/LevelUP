@@ -66,7 +66,7 @@ public class Graphs {
     }
 
     public void fill(int[][] image, int i, int j, int color, int newColor) {
-        if (i < 0 || i > image.length || j < 0 || j > image[i].length || image[i][j] != color)
+        if (i < 0 || i >= image.length || j < 0 || j >= image[i].length || image[i][j] != color)
             return;
         image[i][j] = newColor;
         fill(image, i + 1, j, color, newColor);
