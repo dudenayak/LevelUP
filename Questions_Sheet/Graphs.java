@@ -2,6 +2,7 @@ package Questions_Sheet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Queue;
 
 public class Graphs {
 
@@ -159,9 +160,55 @@ public class Graphs {
         return false;
     }
 
-    // GFG
+    // GFG Steps by Knight
 
-    // GFG
+    boolean isValid(int x, int y, int N) {
+        return (x >= 0 && x < N && y >= 0 && y < N);
+    }
+
+    public int minStepToReachTarget(int KnightPos[], int TargetPos[], int N) {
+        KnightPos[0]--;
+        KnightPos[1]--;
+        TargetPos[0]--;
+        TargetPos[1]--;
+
+        int dx[] = { -2, -1, 1, 2, -2, -1, 1, 2 };
+        int dy[] = { -1, -2, -2, -1, 1, 2, 2, 1 };
+        boolean vis[][] = new boolean[N][N];
+
+        Queue<ArrayList<Integer>> q = new LinkedList<>();
+        ArrayList<Integer> temp = new ArrayList<>();
+        temp.add(KnightPos[0]);
+        temp.add(KnightPos[1]);
+        temp.add(0);
+
+        q.add(temp);
+        vis[KnightPos[0]][KnightPos[1]] = true;
+
+        while (!q.isEmpty()) {
+            ArrayList<Integer> temp2 = q.poll();
+            int x = temp2.get(0);
+            int y = temp2.get(1);
+            int steps = temp2.get(2);
+
+            if (x == TargetPos[0] && y == TargetPos[1])
+                return steps;
+
+            for (int i = 0; i < 8; i++) {
+                int x1 = x + dx[i];
+                int y1 = y + dy[i];
+                if (isValid(x1, y1, N) && !vis[x1][y1]) {
+                    ArrayList<Integer> temp1 = new ArrayList<>();
+                    temp1.add(x1);
+                    temp1.add(y1);
+                    temp1.add(steps + 1);
+                    q.add(temp1);
+                    vis[x1][y1] = true;
+                }
+            }
+        }
+        return -1;
+    }
 
     // LEETCODE 394. Decode String
 
