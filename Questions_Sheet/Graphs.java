@@ -347,7 +347,29 @@ public class Graphs {
 
     // GFG
 
-    // LEETCODE
+    // LEETCODE 1376. Time Needed to Inform All Employees
+
+    public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+
+        int[] calculatedTime = new int[n];
+        Arrays.fill(calculatedTime, -1);
+        int result = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            if (informTime[i] == 0) {
+                result = Math.max(result, calc(i, manager, informTime, calculatedTime));
+            }
+        }
+        return result;
+    }
+
+    private int calc(int node, int[] manager, int[] informTime, int[] calculatedTime) {
+        if (manager[node] == -1) {
+            calculatedTime[node] = informTime[node];
+        } else if (calculatedTime[node] == -1) {
+            calculatedTime[node] = informTime[node] + calc(manager[node], manager, informTime, calculatedTime);
+        }
+        return calculatedTime[node];
+    }
 
     // GFG
 
