@@ -1,9 +1,6 @@
 package Questions_Sheet;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class Graphs {
 
@@ -373,11 +370,136 @@ public class Graphs {
 
     // GFG
 
-    // LEETCODE
+    // LEETCODE 947. Most Stones Removed with Same Row or Column
 
-    // LEETCODE
+    Map<Integer, Integer> parent = new HashMap<>();
+    Map<Integer, Integer> rank = new HashMap<>();
+    int count = 0;
 
-    // LEETCODE
+    private int findParent(int x) {
+        if (parent.getOrDefault(x, 0) != x)
+            parent.put(x, findParent(parent.getOrDefault(x, 0)));
+        return parent.get(x);
+    }
+
+    private void union(int r, int c) {
+        int xSet = findParent(r), ySet = findParent(c);
+
+        if (xSet == ySet)
+            return;
+
+        count--;
+
+        if (rank.getOrDefault(xSet, 0) < rank.getOrDefault(ySet, 0))
+            parent.put(xSet, ySet);
+
+        else if (rank.getOrDefault(xSet, 0) > rank.getOrDefault(ySet, 0))
+            parent.put(ySet, xSet);
+
+        else {
+            parent.put(ySet, xSet);
+            rank.put(xSet, rank.getOrDefault(ySet, 0) + 1);
+        }
+    }
+
+    public int removeStones(int[][] stones) {
+        for (int[] c : stones) {
+            int row = -(c[0] + 1);
+            int col = (c[1] + 1);
+
+            parent.put(row, row);
+            parent.put(col, col);
+        }
+        count = parent.size();
+
+        for (int[] c : stones) {
+            int row = -(c[0] + 1);
+            int col = (c[1] + 1);
+
+            union(row, col);
+        }
+        return stones.length - count;
+    }
+
+    // LEETCODE 1162. As Far from Land as Possible
+
+    int dx[] = { 1, 0, -1, 0 };
+    int dy[] = { 0, 1, 0, -1 };
+
+    public int maxDistance(int[][] grid) {
+        int size = grid.length + grid[0].length;
+        for (int i = 1; i <= size; i++) {
+            boolean f = false;
+            for (int j = 0; j < grid.length; ++j) {
+                for (int k = 0; k < grid[0].length; ++k) {
+                    for (int l = 0; l < 4; ++l) {
+                        int x = j + dx[l];
+                        int y = k + dy[l];
+                        if (grid[j][k] == i) {
+                            if (valid(x, y, grid)) {
+                                f = true;
+                                grid[x][y] = i + 1;
+                            }
+                        }
+
+                    }
+                }
+            }
+            if (!f)
+                return i == 1 ? -1 : i - 1;
+        }
+        return 0;
+    }
+
+    public boolean valid(int i, int j, int[][] grid) {
+        return i >= 0 && j >= 0 && i < grid.length && j < grid[0].length && grid[i][j] == 0;
+    }
+
+    // LEETCODE 1334. Find the City With the Smallest Number of Neighbors at a
+    // Threshold Distance
+
+    public int findTheCity(int n, int[][] edges, int distanceThreshold) {
+
+        int[][] arr = new int[n][n];
+
+        for (int[] oneD : arr) {
+            Arrays.fill(oneD, (int) 1e9);
+        }
+
+        for (int[] edge : edges) {
+            arr[edge[0]][edge[1]] = edge[2];
+            arr[edge[1]][edge[0]] = edge[2];
+        }
+
+        for (int i = 0; i < n; i++) {
+            arr[i][i] = 0;
+        }
+
+        for (int intermediate = 0; intermediate < n; intermediate++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    arr[i][j] = Math.min(arr[i][j], (arr[i][intermediate] + arr[intermediate][j]));
+                }
+            }
+        }
+
+        int minNoOfCity = (int) 1e9;
+        int ans = -1;
+
+        for (int i = 0; i < n; i++) {
+            int cityCount = 0;
+            for (int j = 0; j < n; j++) {
+                if (arr[i][j] <= distanceThreshold) {
+                    cityCount++;
+                }
+            }
+            if (cityCount <= minNoOfCity) {
+                minNoOfCity = cityCount;
+                ans = i;
+            }
+        }
+        return ans;
+    }
 
     // GFG
 
@@ -385,13 +507,183 @@ public class Graphs {
 
     // GFG
 
-    // LEETCODE
+    // LEETCODE 399. Evaluate Division
 
-    // LEETCODE
+    private Map<String, Map<String, Double>> makeGraph(List<List<String>> e, double[] values) {
+
+        Map<String, Map<String, Double>> graph = new HashMap<>();
+        String u, v;
+
+        for (int i = 0; i < e.size(); i++) {
+            u = e.get(i).get(0);
+            v = e.get(i).get(1);
+
+            graph.putIfAbsent(u, new HashMap<>());
+            graph.get(u).put(v, values[i]);
+
+            graph.putIfAbsent(v, new HashMap<>());
+            graph.get(v).put(u, 1 / values[i]);
+
+        }
+        return graph;
+    }
+
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        Map<String, Map<String, Double>> graph = makeGraph(equations, values);
+
+        double[] ans = new double[queries.size()];
+
+        for (int i = 0; i < queries.size(); i++) {
+            ans[i] = dfs(queries.get(i).get(0), queries.get(i).get(1), new HashSet<>(), graph);
+        }
+        return ans;
+    }
+
+    public double dfs(String src, String dest, Set<String> visited, Map<String, Map<String, Double>> graph) {
+
+        if (graph.containsKey(src) == false)
+            return -1.0;
+
+        if (graph.get(src).containsKey(dest)) {
+            return graph.get(src).get(dest);
+        }
+
+        visited.add(src);
+
+        for (Map.Entry<String, Double> nbr : graph.get(src).entrySet()) {
+            if (visited.contains(nbr.getKey()) == false) {
+                double weight = dfs(nbr.getKey(), dest, visited, graph);
+
+                if (weight != -1.0) {
+                    return nbr.getValue() * weight;
+                }
+            }
+        }
+        return -1.0;
+    }
+
+    // LEETCODE 909. Snakes and Ladders
+
+    public int snakesAndLadders(int[][] board) {
+        if (board.length == 1)
+            return 0;
+        int steps = 0;
+        int n = board.length;
+        Map<Integer, Node> nodes = createBoard(board);
+        boolean[][] visited = new boolean[n][n];
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(1);
+        visited[n - 1][0] = true;
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int curr = queue.poll();
+                if (curr == n * n) {
+                    return steps;
+                }
+                for (int k = 1; k <= 6; k++) {
+                    int next = curr + k;
+                    if (next > n * n)
+                        break;
+                    Node node = nodes.get(next);
+                    if (visited[node.x][node.y])
+                        continue;
+                    visited[node.x][node.y] = true;
+                    if (board[node.x][node.y] == -1)
+                        queue.add(next);
+                    else
+                        queue.add(board[node.x][node.y]);
+                }
+            }
+            steps++;
+        }
+        return -1;
+    }
+
+    public Map<Integer, Node> createBoard(int[][] board) {
+        Map<Integer, Node> nodes = new HashMap<>();
+        int x = board.length - 1;
+        int y = 0;
+        int num = 0;
+        boolean leftToRight = true;
+
+        while (x >= 0 && y >= 0) {
+            num++;
+            nodes.put(num, new Node(x, y, board[x][y]));
+            if (leftToRight && y == board.length - 1) {
+                x--;
+                leftToRight = false;
+            } else if (!leftToRight && y == 0) {
+                x--;
+                leftToRight = true;
+            } else {
+                if (leftToRight) {
+                    y++;
+                } else {
+                    y--;
+                }
+            }
+        }
+        return nodes;
+    }
+
+    class Node {
+        int x;
+        int y;
+        int val;
+
+        Node(int x, int y, int val) {
+            this.x = x;
+            this.y = y;
+            this.val = val;
+        }
+    }
 
     // GFG
 
-    // LEETCODE
+    // LEETCODE 787. Cheapest Flights Within K Stops
+
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+
+        Map<Integer, List<int[]>> graph = new HashMap<>();
+        buildGraph(flights, graph);
+
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> Integer.compare(a[1], b[1]));
+        minHeap.add(new int[] { src, 0, 0 });
+
+        HashMap<Integer, Integer> visited = new HashMap<>();
+
+        while (!minHeap.isEmpty()) {
+            int[] curr = minHeap.poll();
+            int city = curr[0];
+            int cost = curr[1];
+            int stops = curr[2];
+
+            if (!visited.containsKey(city) || stops < visited.get(city))
+                visited.put(city, stops);
+            else
+                continue;
+
+            if (city == dst)
+                return cost;
+
+            if (stops > k || !graph.containsKey(city))
+                continue;
+
+            for (int[] adjCity : graph.get(city)) {
+                minHeap.add(new int[] { adjCity[0], cost + adjCity[1], stops + 1 });
+            }
+        }
+        return -1;
+    }
+
+    void buildGraph(int[][] flights, Map<Integer, List<int[]>> graph) {
+        for (int[] flight : flights) {
+            graph.putIfAbsent(flight[0], new ArrayList<>());
+            graph.get(flight[0]).add(new int[] { flight[1], flight[2] });
+        }
+    }
 
     // GFG
 
