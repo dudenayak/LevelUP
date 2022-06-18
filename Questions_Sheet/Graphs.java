@@ -342,7 +342,68 @@ public class Graphs {
         return node[i] = true;
     }
 
-    // GFG
+    // GFG Strongly Connected Components (Kosaraju's Algo)
+
+    class Solution {
+        public int kosaraju(int V, ArrayList<ArrayList<Integer>> adj) {
+
+            Stack<Integer> st = new Stack<>();
+            boolean[] visited = new boolean[V];
+
+            Arrays.fill(visited, false);
+
+            for (int i = 0; i < V; i++) {
+                if (!visited[i])
+                    dfs(i, visited, st, adj);
+            }
+            ArrayList<ArrayList<Integer>> transposeAdj = new ArrayList<>();
+            transposeGraph(V, adj, transposeAdj);
+
+            int componentCount = 0;
+            Arrays.fill(visited, false);
+            while (!st.isEmpty()) {
+                int u = st.peek();
+                st.pop();
+                if (!visited[u]) {
+                    componentCount++;
+                    dfs(u, visited, transposeAdj);
+                }
+            }
+            return componentCount;
+        }
+
+        static void dfs(int u, boolean[] visited, Stack<Integer> st, ArrayList<ArrayList<Integer>> adj) {
+            visited[u] = true;
+            for (int v : adj.get(u)) {
+                if (visited[v] == false)
+                    dfs(v, visited, st, adj);
+            }
+            st.push(u);
+        }
+
+        static void transposeGraph(int V, ArrayList<ArrayList<Integer>> adj,
+                ArrayList<ArrayList<Integer>> transposeAdj) {
+            for (int i = 0; i < V; i++) {
+                transposeAdj.add(new ArrayList<Integer>());
+            }
+
+            for (int i = 0; i < V; i++) {
+                for (int v : adj.get(i)) {
+                    transposeAdj.get(v).add(i);
+                }
+            }
+        }
+
+        // overloading concept
+        static void dfs(int u, boolean[] visited, ArrayList<ArrayList<Integer>> adj) {
+            visited[u] = true;
+            for (int v : adj.get(u)) {
+                if (visited[v] == false) {
+                    dfs(v, visited, adj);
+                }
+            }
+        }
+    }
 
     // LEETCODE 1376. Time Needed to Inform All Employees
 
@@ -501,11 +562,21 @@ public class Graphs {
         return ans;
     }
 
-    // GFG
+    // GFG Floyd Warshall
 
-    // GFG
-
-    // GFG
+    public void shortest_distance(int[][] matrix) {
+        for (int k = 0; k < matrix.length; k++) {
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j = 0; j < matrix.length; j++) {
+                    if (matrix[i][k] != -1 && matrix[k][j] != -1) {
+                        if (matrix[i][k] + matrix[k][j] < matrix[i][j] || matrix[i][j] == -1) {
+                            matrix[i][j] = matrix[i][k] + matrix[k][j];
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // LEETCODE 399. Evaluate Division
 
@@ -640,7 +711,47 @@ public class Graphs {
         }
     }
 
-    // GFG
+    // GFG Topological sort
+
+    static int[] topoSort(int V, ArrayList<ArrayList<Integer>> adj) {
+        ArrayList<Integer> result = new ArrayList<>();
+        int indegree[] = getIndegree(adj, V);
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            int curr = queue.poll();
+            result.add(curr);
+            for (int i : adj.get(curr)) {
+                indegree[i]--;
+                if (indegree[i] == 0) {
+                    queue.add(i);
+                }
+            }
+
+        }
+
+        int intArray[] = new int[result.size()];
+
+        for (int i = 0; i < intArray.length; i++) {
+            intArray[i] = result.get(i);
+        }
+        return intArray;
+    }
+
+    private static int[] getIndegree(ArrayList<ArrayList<Integer>> adj, int V) {
+        int indegree[] = new int[V];
+        for (int i = 0; i < adj.size(); i++) {
+            for (int j : adj.get(i)) {
+                indegree[j]++;
+            }
+        }
+        return indegree;
+    }
 
     // LEETCODE 787. Cheapest Flights Within K Stops
 
@@ -684,9 +795,5 @@ public class Graphs {
             graph.get(flight[0]).add(new int[] { flight[1], flight[2] });
         }
     }
-
-    // GFG
-
-    // GFG
 
 }
