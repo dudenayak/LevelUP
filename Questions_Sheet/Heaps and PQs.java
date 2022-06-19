@@ -31,4 +31,48 @@ public class HeapsAndPQs {
         }
         return ans;
     }
+
+    // LEETCODE 215. Kth Largest Element in an Array
+
+    public int findKthLargest(int[] nums, int k) {
+        Arrays.sort(nume);
+        int n = nums.length;
+        return nums[n - k];
+    }
+
+    // more optimized solution
+
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (i < k) {
+                pq.add(nums[i]);
+            } else {
+                if (nums[i] > pq.peek()) {
+                    pq.remove();
+                    pq.add(nums[i]);
+                }
+            }
+        }
+        int res = pq.peek();
+        return res;
+    }
+
+    // LEETCODE 264. Ugly Number II
+
+    public int nthUglyNumber(int n) {
+        int p[] = new int[n + 1];
+        p[1] = 1;
+        int a = 1, b = 1, c = 1;
+        for (int i = 2; i <= n; i++) {
+            p[i] = Math.min(2 * p[a], Math.min(3 * p[b], 5 * p[c]));
+            if (p[i] == 2 * p[a])
+                a++;
+            if (p[i] == 3 * p[b])
+                b++;
+            if (p[i] == 5 * p[c])
+                c++;
+        }
+        return p[n];
+    }
 }
