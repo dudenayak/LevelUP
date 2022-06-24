@@ -27,4 +27,13 @@ public class Strings {
         return st.size() == 0;
     }
 
+    // LEETCODE 28. Implement strStr()
+
+    public int strStr(String haystack, String needle) {
+        if (haystack.contains(needle))
+            return haystack.indexOf(needle);
+        else
+            return -1;
+    }
+
 }
