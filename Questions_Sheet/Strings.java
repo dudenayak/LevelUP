@@ -52,4 +52,58 @@ public class Strings {
         return strs[0];
     }
 
+    // LEETCODE 680. Valid Palindrome II
+
+    private boolean checkPalindrome(String s, int i, int j) {
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+
+        return true;
+    }
+
+    public boolean validPalindrome(String s) {
+        int i = 0;
+        int j = s.length() - 1;
+
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return (checkPalindrome(s, i, j - 1) || checkPalindrome(s, i + 1, j));
+            }
+
+            i++;
+            j--;
+        }
+
+        return true;
+    }
+
+    // LEETCODE 12. Integer to Roman
+
+    public String intToRoman(int num) {
+        int[] digits = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+        String[] values = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+
+        String result = "";
+        int i = 0, lengthOfDigits = 13;
+
+        while (i < lengthOfDigits) {
+            while (num >= digits[i]) {
+                num = num - digits[i];
+                result += values[i];
+                if (num == 0)
+                    break;
+            }
+            if (num == 0)
+                break;
+            i++;
+        }
+
+        return result;
+    }
+
 }
