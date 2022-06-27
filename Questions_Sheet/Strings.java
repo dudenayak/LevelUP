@@ -1,5 +1,7 @@
 package Questions_Sheet;
 
+import java.util.ArrayList;
+
 public class Strings {
 
     // LEETCODE 20. Valid Parentheses
@@ -106,4 +108,97 @@ public class Strings {
         return result;
     }
 
+    // LEETCODE 22. Generate Parentheses
+
+    public List<String> generateParenthesis(int n) {
+        List<String> ans = new ArrayList<>();
+        if (n == 0) {
+            ans.add("");
+        } else {
+            for (int i = 0; i < n; i++)
+                for (String left : generateParenthesis(i))
+                    for (String right : generateParenthesis(n - 1 - i))
+                        ans.add("(" + left + ")" + right);
+        }
+        return ans;
+    }
+
+    // LEETCODE 71. Simplify Path
+
+    public String simplifyPath(String path) {
+
+        Stack<String> s = new Stack<>();
+        StringBuilder res = new StringBuilder();
+        String[] p = path.split("/");
+
+        for (int i = 0; i < p.length; i++) {
+            if (!s.isEmpty() && p[i].equals(".."))
+                s.pop();
+            else if (!p[i].equals("") && !p[i].equals(".") && !p[i].equals(".."))
+                s.push(p[i]);
+        }
+
+        if (s.isEmpty())
+            return "/";
+        while (!s.isEmpty()) {
+            res.insert(0, s.pop()).insert(0, "/");
+        }
+
+        return res.toString();
+
+    }
+
+    // GFG Smallest window in a string containing all the characters of another
+    // string
+
+    public static String smallestWindow(String s, String p) {
+        if (s.length() == 0 || p.length() == 0 || s.length() < p.length())
+            return "-1";
+        HashMap<Character, Integer> h = new HashMap<>();
+        for (int i = 0; i < p.length(); i++) {
+            if (!h.containsKey(p.charAt(i)))
+                h.put(p.charAt(i), 0);
+            h.put(p.charAt(i), h.get(p.charAt(i)) + 1);
+        }
+        String res = "";
+        int n = h.size();
+        int start = 0, end = 0;
+        int min_length = Integer.MAX_VALUE;
+        int count = 0;
+        char ch[] = s.toCharArray();
+        int ind = 0;
+        HashMap<Character, Integer> hm = new HashMap<>();
+        for (int i = 0; i < ch.length; i++) {
+            if (h.containsKey(ch[i])) {
+                if (!hm.containsKey(ch[i]))
+                    hm.put(ch[i], 0);
+                hm.put(ch[i], hm.get(ch[i]) + 1);
+                if (h.get(ch[i]) == hm.get(ch[i])) {
+                    count++;
+                }
+            }
+            if (count == n) {
+                while ((!hm.containsKey(ch[ind])) || hm.get(ch[ind]) > h.get((ch[ind]))) {
+                    if ((!hm.containsKey(ch[ind]))) {
+                        ind++;
+                    } else if (hm.get(ch[ind]) > h.get((ch[ind]))) {
+                        hm.put(ch[ind], hm.get(ch[ind]) - 1);
+                        ind++;
+                    }
+                }
+                int min = i - ind + 1;
+                if (min_length > min) {
+                    start = ind;
+                    end = i + 1;
+                    min_length = min;
+                }
+
+            }
+        }
+        if (min_length == Integer.MAX_VALUE) {
+            return "-1";
+        }
+        return s.substring(start, min_length + start);
+
+    }
 }
