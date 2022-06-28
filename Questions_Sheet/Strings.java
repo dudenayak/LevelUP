@@ -2,6 +2,8 @@ package Questions_Sheet;
 
 import java.util.ArrayList;
 
+import Foundation.HashMap;
+
 public class Strings {
 
     // LEETCODE 20. Valid Parentheses
@@ -200,5 +202,94 @@ public class Strings {
         }
         return s.substring(start, min_length + start);
 
+    }
+
+    // LEETCODE 227. Basic Calculator II
+
+    public int calculate(String s) {
+        if (s == null || s.isEmpty())
+            return 0;
+        int length = s.length();
+        int currentNumber = 0, lastNumber = 0, result = 0;
+        char operation = '+';
+        for (int i = 0; i < length; i++) {
+            char currentChar = s.charAt(i);
+            if (Character.isDigit(currentChar)) {
+                currentNumber = (currentNumber * 10) + (currentChar - '0');
+            }
+            if (!Character.isDigit(currentChar) && !Character.isWhitespace(currentChar) || i == length - 1) {
+                if (operation == '+' || operation == '-') {
+                    result += lastNumber;
+                    lastNumber = (operation == '+') ? currentNumber : -currentNumber;
+                } else if (operation == '*') {
+                    lastNumber = lastNumber * currentNumber;
+                } else if (operation == '/') {
+                    lastNumber = lastNumber / currentNumber;
+                }
+                operation = currentChar;
+                currentNumber = 0;
+            }
+        }
+        result += lastNumber;
+        return result;
+    }
+
+    // LEETCODE 49. Group Anagrams
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> res = new ArrayList<>();
+        if (strs.length == 0)
+            return res;
+        HashMap<String, List<String>> map = new HashMap<>();
+        for (String s : strs) {
+            char[] ch = new char[26];
+            for (char c : s.toCharArray()) {
+                ch[c - 'a']++;
+            }
+            String str = new String(ch);
+            map.computeIfAbsent(str, k -> new ArrayList<>());
+            map.get(str).add(s);
+        }
+        res.addAll(map.values());
+        return res;
+    }
+
+    // LEETCODE 151. Reverse Words in a String
+
+    public String reverseWords(String s) {
+        return Arrays.stream(s.split(" ")).filter(x -> x.length() != 0).reduce("", (str, rev) -> rev + " " + str)
+                .trim();
+    }
+
+    // GFG Word Wrap
+
+    public int solveWordWrap(int[] nums, int k) {
+        // Code here
+        int dp[] = new int[nums.length + 1];
+        Arrays.fill(dp, -1);
+        dp[0] = 0;
+        for (int i = 1; i <= nums.length; i++) {
+            int cost = 0;
+            for (int j = i; j <= nums.length; j++) {
+                cost += nums[j - 1];
+                if (cost > k)
+                    break;
+                if (j < nums.length) {
+                    int val = k - cost;
+                    val *= val;
+                    if (dp[j] == -1)
+                        dp[j] = dp[i - 1] + val;
+                    else
+                        dp[j] = Math.min(dp[j], dp[i - 1] + val);
+                } else {
+                    if (dp[j] == -1)
+                        dp[j] = dp[i - 1];
+                    else
+                        dp[j] = Math.min(dp[j], dp[i - 1]);
+                }
+                cost++;
+            }
+        }
+        return dp[nums.length];
     }
 }
