@@ -39,9 +39,37 @@ public class MathematicalProblems {
         return sb.reverse().toString();
     }
 
-    // LEETCODE
+    // LEETCODE 168. Excel Sheet Column Title
 
-    // LEETCODE
+    public String convertToTitle(int columnNumber) {
+        String s = "";
+        while (columnNumber != 0) {
+            columnNumber = columnNumber - 1;
+            char c = (char) (columnNumber % 26 + 65);
+            s = c + s;
+            columnNumber /= 26;
+        }
+        return s;
+    }
+
+    // LEETCODE 202. Happy Number
+
+    public int getNext(int n) {
+        int totalSum = 0;
+        while (n > 0) {
+            int d = n % 10;
+            n = n / 10;
+            totalSum += d * d;
+        }
+        return totalSum;
+    }
+
+    public boolean isHappy(int n) {
+        while (n != 1 && n != 4) {
+            n = getNext(n);
+        }
+        return n == 1;
+    }
 
     // LEETCODE
 
